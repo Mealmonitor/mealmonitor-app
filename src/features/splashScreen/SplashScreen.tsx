@@ -1,10 +1,11 @@
-import React from "react";
+import React from 'react';
 
-import { View, Animated, ImageBackground, Text } from "react-native";
+import {View, Animated, ImageBackground, Text, Image} from 'react-native';
+import SplashScreenLogo from '../../../assets/svg/SplashScreenLogo';
 
 const SIZE_DURATION = 300;
 
-const image = require("../../../assets/splash.png");
+const image = require('../../../assets/splash.png');
 
 const SplashScreen = () => {
   const [fadeAnim] = React.useState(new Animated.Value(0));
@@ -46,13 +47,11 @@ const SplashScreen = () => {
       <ImageBackground
         className="z-20 flex-1 justify-center"
         resizeMode="cover"
-        source={image}
-      >
+        source={image}>
         <View className="items-center justify-center w-full">
           <Animated.View
-            style={{ opacity: fadeAnim, transform: [{ scale: sizeAnim }] }}
-          >
-            <Text>asdadasd</Text>
+            style={{opacity: fadeAnim, transform: [{scale: sizeAnim}]}}>
+            <SplashScreenLogo />
           </Animated.View>
         </View>
       </ImageBackground>
