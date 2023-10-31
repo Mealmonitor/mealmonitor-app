@@ -24,7 +24,7 @@ const MainNavigation = () => {
     <KeyboardAvoidingView
       keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}
       behavior={behavior}
-      className="flex-1">
+      className="flex-1 pt-12 bg-inherit">
       <Stack.Navigator
         initialRouteName="Public"
         screenOptions={{
