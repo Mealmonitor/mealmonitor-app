@@ -5,22 +5,23 @@ import {Meal} from '../api/domain';
 import PieChart from 'react-native-pie-chart';
 import CalendarIcon from '../../../assets/svg/CalendarIcon';
 import ArrowBack from '../../../assets/svg/ArrowBack';
+import moment from 'moment';
 
 const DashboardScreen = () => {
   const [mealList, setMealList] = useState<Meal[]>([]);
   const [error, setError] = useState(null);
-  const [totalPerDay, setTotalPerDay] = useState(0);
+  const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
 
   useEffect(() => {
-    async function fetchMeals() {
+    async function fetchMeals(date) {
       try {
-        const fetchedMeals: Meal[] = await getMeals();
+        const fetchedMeals: Meal[] = await getMeals(date);
         setMealList(fetchedMeals);
       } catch (err) {
         setError(err);
       }
     }
-    fetchMeals();
+    fetchMeals(date);
   }, []);
 
   const getPerDay = (meals: Meal[], nutriVal: string) => {
@@ -88,7 +89,7 @@ const DashboardScreen = () => {
           </View>
         </View>
       </View>
-      <View className="pt-10 flex-1 rounded-t-[40] bg-white ">
+      <View className="pt-10 flex-1 rounded-t-[40] bg-white">
         <View style={style.centeredContainer}>
           <PieChart
             widthAndHeight={widthAndHeight}
@@ -187,6 +188,14 @@ const style = StyleSheet.create({
     position: 'relative',
     marginVertical: 6,
     marginHorizontal: 23,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
   },
   mealSectionText: {
     color: '#B8D5CD',
