@@ -6,6 +6,8 @@ import PieChart from 'react-native-pie-chart';
 import CalendarIcon from '../../../assets/svg/CalendarIcon';
 import ArrowBack from '../../../assets/svg/ArrowBack';
 import moment from 'moment';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import MealDetailsModal from '../../features/mealDetails/MealDetailsModal';
 
 const DashboardScreen = () => {
   const [mealList, setMealList] = useState<Meal[]>([]);
@@ -145,26 +147,10 @@ const DashboardScreen = () => {
               const date = new Date(meal.dateTime);
 
               return (
-                <View style={style.mealSection} key={meal.id}>
-                  <Text style={style.mealSectionText}>{index + 1}</Text>
-
-                  <Text
-                    style={[
-                      style.mealSectionText,
-                      style.mealSectionTextMiddle,
-                    ]}>
-                    {date.getHours().toString().padStart(2, '0')}:
-                    {date.getMinutes().toString().padStart(2, '0')}
-                  </Text>
-
-                  <Text style={style.mealSectionText}>
-                    {meal.foodList.reduce(
-                      (sum, current) => sum + current.calories,
-                      0,
-                    )}{' '}
-                    kCal
-                  </Text>
-                </View>
+                <MealDetailsModal
+                  index={index}
+                  date={meal.dateTime}
+                  foodList={meal.foodList}></MealDetailsModal>
               );
             })}
           </View>
