@@ -89,7 +89,7 @@ const DashboardScreen = () => {
           </View>
         </View>
       </View>
-      <View className="pt-10 flex-1 rounded-t-[40] bg-white">
+      <View style={style.modalLikeContainer}>
         <View style={style.centeredContainer}>
           <PieChart
             widthAndHeight={widthAndHeight}
@@ -114,7 +114,7 @@ const DashboardScreen = () => {
           </Text>
         </View>
 
-        <View className="pb-8 pt-6 bg-white">
+        <View className="pb-8 pt-6">
           <LegendItem
             color={sliceColor[0]}
             text={`${totalProteinsForToday}% Proteins`}
@@ -215,7 +215,6 @@ const style = StyleSheet.create({
   centeredContainer: {
     justifyContent: 'center', // Center children vertically
     alignItems: 'center', // Center children horizontally
-    backgroundColor: 'white',
   },
   chartText: {
     position: 'absolute',
@@ -287,6 +286,14 @@ const style = StyleSheet.create({
     marginHorizontal: 23,
     justifyContent: 'center',
     alignContent: 'center',
+  },
+  modalLikeContainer: {
+    //className="pt-10 flex-1 rounded-t-[40] bg-white"
+    paddingTop: 10,
+    flex: 1,
+    backgroundColor: 'white',
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
   },
 });
 
