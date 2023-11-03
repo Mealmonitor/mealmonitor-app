@@ -1,22 +1,9 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Modal,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions,
-  ScrollView,
-  ImageBackground,
-} from 'react-native';
+import {View, TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
 import {MaterialTopTabBarProps} from '@react-navigation/material-top-tabs';
 
 import {tabBarStyle} from './TabBarStyles';
-import {useSelector} from 'react-redux';
 import {twFullConfig} from '../../../../utils/tailwindConfig';
-import DashboardScreen from '../../../../app/screens/DashboardScreen';
-import AddMealModal from '../../../addMeal/addMealModal';
-import SplashScreenLogo from '../../../../../assets/svg/SplashScreenLogo';
 // import { RootState } from "../../../store/store";
 // import { twFullConfig } from "../../../../utils/tailwind/tailwindConfig";
 // import QRCodeModal from "../../../../features/qrCode/QRCodeModal";

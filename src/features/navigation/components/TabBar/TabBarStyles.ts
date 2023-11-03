@@ -1,5 +1,4 @@
 import {StyleSheet} from 'react-native';
-import {twFullConfig} from '../../../../utils/tailwindConfig';
 
 export const tabBarStyle = StyleSheet.create({
   tabBar: {
@@ -14,7 +13,7 @@ export const tabBarStyle = StyleSheet.create({
     backgroundColor: '#fff',
     flexDirection: 'row',
     paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingBottom: 10,
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     borderColor: '#B8D5CD',
