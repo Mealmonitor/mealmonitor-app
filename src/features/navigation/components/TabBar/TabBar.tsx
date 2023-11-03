@@ -40,7 +40,7 @@ const TabBar = ({state, descriptors, navigation}: MaterialTopTabBarProps) => {
         if (index === 1) {
           return (
             <React.Fragment key="key">
-              <AddMealModal isAuth={false}></AddMealModal>
+              <AddMealModal></AddMealModal>
 
               <TouchableOpacity
                 hitSlop={{top: 5, bottom: 20, left: 20, right: 20}}

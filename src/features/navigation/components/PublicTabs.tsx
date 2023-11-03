@@ -16,7 +16,6 @@ import TabBar from './TabBar/TabBar';
 import DashboardScreen from '../../../app/screens/DashboardScreen';
 import MyProfileScreen from '../../../app/screens/MyProfileScreen';
 import SplashScreenLogo from '../../../../assets/svg/SplashScreenLogo';
-import AddMealScreen from '../../../app/screens/AddMealScreen';
 import ArrowBack from '../../../../assets/svg/ArrowBack';
 import DashboardIcon from '../../../../assets/svg/DashboardIcon';
 import AddMealIcon from '../../../../assets/svg/AddMealIcon';

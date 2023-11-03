@@ -26,18 +26,9 @@ import BarcodeIcon from '../../../assets/svg/BarcodeIcon';
 import CloseIcon from '../../../assets/svg/CloseIcon';
 import {AppDispatch, RootState} from '../../app/store/store';
 
-interface QRCodeModal {
-  isAuth: boolean;
-}
+interface QRCodeModal {}
 
-interface AnimatedContentProps {
-  coinsToAdd: number;
-  currentCoins: number | undefined;
-  nextTier: any;
-}
-//var brightness = 0.5;
-
-const QRCodeModal: React.FC<QRCodeModal> = ({isAuth}) => {
+const AddMealModal: React.FC<QRCodeModal> = () => {
   const windowHeight = Dimensions.get('window').height;
   const dispatch = useDispatch<AppDispatch>();
 
@@ -100,12 +91,19 @@ const QRCodeModal: React.FC<QRCodeModal> = ({isAuth}) => {
                     <Text style={style.energyContainerText}>Total Energy</Text>
                     <Text style={style.energyContainerText}>120 kCal</Text>
                   </View>
-                  <View style={style.doneButton}>
-                    <TouchableOpacity
+                  <View>
+                    {/* <TouchableOpacity
                       style={style.doneButton}
                       hitSlop={{top: 5, bottom: 20, left: 20, right: 20}}
                       onPress={() => console.log('Done pressed!')}>
                       <Text style={style.buttonText}>Done</Text>
+                    </TouchableOpacity> */}
+                    <TouchableOpacity
+                      style={style.backButton}
+                      onPress={() => {}}>
+                      <Text className="text-sm font-semibold text-black">
+                        Done
+                      </Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -171,7 +169,7 @@ const style = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 100,
+    height: 110,
     backgroundColor: '#2E856E',
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
@@ -200,7 +198,17 @@ const style = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
   },
+  backButton: {
+    // h-[44px] items-center justify-center rounded-lg py-3 bg-white
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    marginHorizontal: 30,
+    marginVertical: 9,
+    borderRadius: 10,
+  },
   closeIcon: {position: 'absolute', right: 5},
 });
 
-export default QRCodeModal;
+export default AddMealModal;
