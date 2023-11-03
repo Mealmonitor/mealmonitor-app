@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = 'http://192.168.100.26:8080';
+const baseURL = 'http://192.168.100.12:8080';
 
 export async function getMeals(date) {
   try {

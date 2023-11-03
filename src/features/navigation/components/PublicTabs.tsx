@@ -46,20 +46,7 @@ const PublicTabs = () => {
           tabBarIcon: () => <DashboardIcon color="#2E856E" size={31} />,
         }}
       />
-      <Tab.Screen
-        name="AddMeal"
-        component={AddMealScreen}
-        options={{
-          tabBarIcon: ({color}: {color: string}) => (
-            <View
-              className="-top-10"
-              hitSlop={{top: 5, bottom: 20, left: 20, right: 20}}
-              style={style.icon}>
-              <AddMealIcon size={55} color="white" />
-            </View>
-          ),
-        }}
-      />
+
       <Tab.Screen
         name="MyProfile"
         component={MyProfileScreen}

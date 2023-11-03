@@ -48,10 +48,10 @@ const SplashScreen = () => {
         className="z-20 flex-1 justify-center"
         resizeMode="cover"
         source={image}>
-        <View className="items-center justify-center w-full">
+        <View className="items-center justify-center w-full -top-10">
           <Animated.View
             style={{opacity: fadeAnim, transform: [{scale: sizeAnim}]}}>
-            <SplashScreenLogo />
+            <SplashScreenLogo size={300} />
           </Animated.View>
         </View>
       </ImageBackground>

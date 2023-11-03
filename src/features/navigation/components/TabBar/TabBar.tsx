@@ -4,6 +4,7 @@ import {MaterialTopTabBarProps} from '@react-navigation/material-top-tabs';
 
 import {tabBarStyle} from './TabBarStyles';
 import {twFullConfig} from '../../../../utils/tailwindConfig';
+import AddMealModal from '../../../addMeal/AddMealModal';
 // import { RootState } from "../../../store/store";
 // import { twFullConfig } from "../../../../utils/tailwind/tailwindConfig";
 // import QRCodeModal from "../../../../features/qrCode/QRCodeModal";
@@ -39,6 +40,8 @@ const TabBar = ({state, descriptors, navigation}: MaterialTopTabBarProps) => {
         if (index === 1) {
           return (
             <React.Fragment key="key">
+              <AddMealModal isAuth={false}></AddMealModal>
+
               <TouchableOpacity
                 hitSlop={{top: 5, bottom: 20, left: 20, right: 20}}
                 key={index}
@@ -48,11 +51,17 @@ const TabBar = ({state, descriptors, navigation}: MaterialTopTabBarProps) => {
                 testID={options.tabBarTestID}
                 onPress={onPress}
                 onLongPress={onLongPress}
-                style={tabBarStyle.iconBorderInactive}>
-                <View className="-top-4">
+                style={
+                  isFocused
+                    ? tabBarStyle.iconBorderActive
+                    : tabBarStyle.iconBorderInactive
+                }>
+                <View>
                   {options.tabBarIcon &&
                     options.tabBarIcon({
-                      color: twFullConfig.theme.colors.brombeer,
+                      color: isFocused
+                        ? twFullConfig.theme.colors.brombeer
+                        : twFullConfig.theme.colors.schwartz,
                       focused: isFocused,
                     })}
                 </View>
@@ -61,7 +70,7 @@ const TabBar = ({state, descriptors, navigation}: MaterialTopTabBarProps) => {
           );
         } else {
           return (
-            <View key={index} className="w-8">
+            <View key={index}>
               <TouchableOpacity
                 hitSlop={{top: 5, bottom: 20, left: 20, right: 20}}
                 activeOpacity={1}
