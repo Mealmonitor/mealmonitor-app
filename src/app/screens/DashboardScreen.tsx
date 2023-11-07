@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {ScrollView, Text, View, StyleSheet} from 'react-native';
-import {getMeals} from '../api/publicApi';
+import {getMeals, parseDate} from '../api/publicApi';
 import {Meal} from '../api/domain';
 import PieChart from 'react-native-pie-chart';
 import CalendarIcon from '../../../assets/svg/CalendarIcon';
@@ -8,11 +8,21 @@ import ArrowBack from '../../../assets/svg/ArrowBack';
 import moment from 'moment';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MealDetailsModal from '../../features/mealDetails/MealDetailsModal';
+import DatePicker from 'react-native-date-picker';
+
+const subtractDaysFromDate = (currentDate, daysToSubtract) => {
+  daysToSubtract = daysToSubtract || 0;
+  const pastDate = new Date(currentDate);
+  pastDate.setDate(pastDate.getDate() - daysToSubtract);
+
+  return pastDate;
+};
 
 const DashboardScreen = () => {
   const [mealList, setMealList] = useState<Meal[]>([]);
   const [error, setError] = useState(null);
-  const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
+  const [date, setDate] = useState(new Date());
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     async function fetchMeals(date) {
@@ -24,7 +34,7 @@ const DashboardScreen = () => {
       }
     }
     fetchMeals(date);
-  }, []);
+  }, [date]);
 
   const getPerDay = (meals: Meal[], nutriVal: string) => {
     return (
@@ -73,21 +83,66 @@ const DashboardScreen = () => {
       </View>
     );
   };
-
   return (
     <>
       <View className="pt-12">
         <View style={style.banner}>
           <View style={style.arrow}>
-            <ArrowBack />
+            <TouchableOpacity
+              hitSlop={15}
+              onPress={() => {
+                setDate(subtractDaysFromDate(date, 1));
+              }}>
+              <ArrowBack />
+            </TouchableOpacity>
           </View>
 
-          <View style={style.today}>
+          <TouchableOpacity
+            style={style.today}
+            onPress={() => {
+              setOpen(true);
+            }}>
             <CalendarIcon color="white" size={25}></CalendarIcon>
-            <Text style={style.todayText}>Today</Text>
-          </View>
+            <Text style={style.todayText}>
+              {parseDate(date) === parseDate(new Date())
+                ? 'Today'
+                : date.getDate().toString().padStart(2, '0') +
+                  '.' +
+                  (date.getMonth() + 1).toString().padStart(2, '0') +
+                  '.' +
+                  date.getFullYear()}
+            </Text>
+          </TouchableOpacity>
+          <DatePicker
+            maximumDate={new Date()}
+            modal
+            open={open}
+            mode="date"
+            date={date}
+            onConfirm={date => {
+              setOpen(false);
+              setDate(date);
+            }}
+            onCancel={() => {
+              setOpen(false);
+            }}
+          />
           <View style={style.arrow}>
-            <ArrowBack rotated={true} />
+            <TouchableOpacity
+              hitSlop={15}
+              disabled={parseDate(date) === parseDate(new Date())}
+              onPress={() => {
+                setDate(subtractDaysFromDate(date, -1));
+              }}>
+              <ArrowBack
+                rotated={true}
+                color={
+                  parseDate(date) === parseDate(new Date())
+                    ? '#B8D5CD'
+                    : 'white'
+                }
+              />
+            </TouchableOpacity>
           </View>
         </View>
       </View>

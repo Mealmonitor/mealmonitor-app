@@ -5,20 +5,11 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal",
-      "ios": {
-        "simulator": true
-      },
-      "android": {
-        "image" : "latest"
-      }    
+      "distribution": "internal"
     },
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
-  },
-  "submit": {
     "production": {}
   }
 }
