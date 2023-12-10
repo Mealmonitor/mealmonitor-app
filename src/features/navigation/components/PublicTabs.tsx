@@ -16,7 +16,6 @@ import TabBar from './TabBar/TabBar';
 import DashboardScreen from '../../../app/screens/DashboardScreen';
 import MyProfileScreen from '../../../app/screens/MyProfileScreen';
 import SplashScreenLogo from '../../../../assets/svg/SplashScreenLogo';
-import AddMealScreen from '../../../app/screens/AddMealScreen';
 import ArrowBack from '../../../../assets/svg/ArrowBack';
 import DashboardIcon from '../../../../assets/svg/DashboardIcon';
 import AddMealIcon from '../../../../assets/svg/AddMealIcon';
@@ -46,20 +45,7 @@ const PublicTabs = () => {
           tabBarIcon: () => <DashboardIcon color="#2E856E" size={31} />,
         }}
       />
-      <Tab.Screen
-        name="AddMeal"
-        component={AddMealScreen}
-        options={{
-          tabBarIcon: ({color}: {color: string}) => (
-            <View
-              className="-top-10"
-              hitSlop={{top: 5, bottom: 20, left: 20, right: 20}}
-              style={style.icon}>
-              <AddMealIcon size={55} color="white" />
-            </View>
-          ),
-        }}
-      />
+
       <Tab.Screen
         name="MyProfile"
         component={MyProfileScreen}
