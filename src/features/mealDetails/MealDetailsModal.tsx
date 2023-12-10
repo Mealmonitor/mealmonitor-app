@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Dimensions,
   ScrollView,
+  Alert,
 } from 'react-native';
 
 import {useDispatch} from 'react-redux';
@@ -131,10 +132,25 @@ const MealDetailsModal: React.FC<MealDetailsModal> = ({
             <View>
               <TouchableOpacity
                 style={style.deleteButton}
-                onPress={() => {
-                  setVisible(false);
-                  onDeleteMeal(meal); // Use the passed callback
-                }}>
+                onPress={() =>
+                  Alert.alert(
+                    `Are you sure you want to delete this Meal?`,
+                    '',
+                    [
+                      {
+                        text: 'Cancel',
+                        style: 'cancel',
+                      },
+                      {
+                        text: 'OK',
+                        onPress: () => {
+                          setVisible(false);
+                          onDeleteMeal(meal); // Use the passed callback
+                        },
+                      },
+                    ],
+                  )
+                }>
                 <Text style={style.deleteButtonText}>Delete Meal</Text>
               </TouchableOpacity>
             </View>
