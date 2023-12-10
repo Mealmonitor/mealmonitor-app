@@ -1,11 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {ScrollView, Text, View, StyleSheet} from 'react-native';
-import {getMeals, parseDate} from '../api/publicApi';
+import {deleteMeal, getMeals, parseDate} from '../api/publicApi';
 import {Meal} from '../api/domain';
 import PieChart from 'react-native-pie-chart';
 import CalendarIcon from '../../../assets/svg/CalendarIcon';
 import ArrowBack from '../../../assets/svg/ArrowBack';
-import moment from 'moment';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MealDetailsModal from '../../features/mealDetails/MealDetailsModal';
 import DatePicker from 'react-native-date-picker';
@@ -35,6 +34,16 @@ const DashboardScreen = () => {
     }
     fetchMeals(date);
   }, [date]);
+
+  const handleMealDeletion = async (meal: Meal) => {
+    try {
+      await deleteMeal(meal); // Assumes deleteMeal is an async function that calls your API
+      setMealList(mealList.filter(lmeal => lmeal.id !== meal.id));
+    } catch (error) {
+      console.error('Error deleting meal:', error);
+      // Handle any errors here
+    }
+  };
 
   const getPerDay = (meals: Meal[], nutriVal: string) => {
     return (
@@ -165,10 +174,10 @@ const DashboardScreen = () => {
                     )
                   : 0;
               })
-              .reduce((a, b) => a + b, 0)}
-            {'\n'}
+              .reduce((a, b) => a + b, 0)}{' '}
             kCal
           </Text>
+          {true && <Text style={style.chartSubText}>{'\n\n\n'}3342 left</Text>}
         </View>
 
         <View className="pb-8 pt-6">
@@ -205,7 +214,8 @@ const DashboardScreen = () => {
                 <MealDetailsModal
                   index={index}
                   date={meal.dateTime}
-                  foodList={meal.foodList}></MealDetailsModal>
+                  meal={meal}
+                  onDeleteMeal={handleMealDeletion}></MealDetailsModal>
               );
             })}
           </View>
@@ -261,7 +271,14 @@ const style = StyleSheet.create({
     position: 'absolute',
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 30,
+    fontSize: 24,
+  },
+  chartSubText: {
+    position: 'absolute',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 18,
+    color: 'gray',
   },
   headerRow: {
     flexDirection: 'row',

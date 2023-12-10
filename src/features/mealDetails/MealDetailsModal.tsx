@@ -1,4 +1,3 @@
-import {Link, useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {
   View,
@@ -8,31 +7,21 @@ import {
   StyleSheet,
   Dimensions,
   ScrollView,
-  ImageBackground,
-  Pressable,
-  TextInput,
 } from 'react-native';
-import {AnimatedCircularProgress} from 'react-native-circular-progress';
 
-import QRCode from 'react-native-qrcode-svg';
-
-import {useDispatch, useSelector} from 'react-redux';
-import * as Brightness from 'expo-brightness';
-import {ChevronDownIcon, ChevronUpIcon} from 'native-base';
+import {useDispatch} from 'react-redux';
 import {twFullConfig} from '../../utils/tailwindConfig';
-import ArrowBack from '../../../assets/svg/ArrowBack';
-import AddMealIcon from '../../../assets/svg/AddMealIcon';
-import BarcodeIcon from '../../../assets/svg/BarcodeIcon';
 import CloseIcon from '../../../assets/svg/CloseIcon';
-import {AppDispatch, RootState} from '../../app/store/store';
-import {Food, Meal} from '../../app/api/domain';
+import {AppDispatch} from '../../app/store/store';
+import {Meal} from '../../app/api/domain';
 import TableComponent from '../navigation/components/TableComponent';
 import StackedBarChartComponent from '../navigation/components/StackedBarChartComponent';
 
-interface QRCodeModal {
+interface MealDetailsModal {
   index: number;
   date: Date;
-  foodList: Food[];
+  meal: Meal;
+  onDeleteMeal: (meal: Meal) => void;
 }
 
 const LegendItem: React.FC<{color: string; text: string}> = ({color, text}) => {
@@ -46,15 +35,21 @@ const LegendItem: React.FC<{color: string; text: string}> = ({color, text}) => {
 
 const sliceColor = ['#ADD8F0', '#FEEA7F', '#FF9D9F'];
 
-const MealDetailsModal: React.FC<QRCodeModal> = ({foodList, index, date}) => {
+const MealDetailsModal: React.FC<MealDetailsModal> = ({
+  index,
+  date,
+  meal,
+  onDeleteMeal,
+}) => {
   const windowHeight = Dimensions.get('window').height;
   const dispatch = useDispatch<AppDispatch>();
   const [visible, setVisible] = useState(false);
 
   const getPerDay = (nutriVal: string) => {
     return (
-      (foodList.reduce((sum, current) => sum + current[nutriVal], 0) * 100) /
-      foodList.reduce(
+      (meal.foodList.reduce((sum, current) => sum + current[nutriVal], 0) *
+        100) /
+      meal.foodList.reduce(
         (sum, current) => sum + current.proteins + current.carbs + current.fats,
         0,
       )
@@ -65,13 +60,6 @@ const MealDetailsModal: React.FC<QRCodeModal> = ({foodList, index, date}) => {
   const totalCarbsForToday = parseFloat(getPerDay('carbs').toFixed(0));
   const totalFatsForToday = parseFloat(getPerDay('fats').toFixed(0));
 
-  const showModal = useSelector(
-    (state: RootState) => state.notification.showCoinsModal,
-  );
-
-  const handlePress = async () => {
-    dispatch({type: 'notifications/showCoinsModal'});
-  };
   const date2 = new Date(date);
   return (
     <View>
@@ -87,7 +75,8 @@ const MealDetailsModal: React.FC<QRCodeModal> = ({foodList, index, date}) => {
         </Text>
 
         <Text style={style.mealSectionText}>
-          {foodList.reduce((sum, current) => sum + current.calories, 0)} kCal
+          {meal.foodList.reduce((sum, current) => sum + current.calories, 0)}{' '}
+          kCal
         </Text>
       </TouchableOpacity>
       <Modal
@@ -117,7 +106,7 @@ const MealDetailsModal: React.FC<QRCodeModal> = ({foodList, index, date}) => {
             </View>
 
             <View>
-              <StackedBarChartComponent data={foodList} />
+              <StackedBarChartComponent data={meal.foodList} />
             </View>
 
             <View style={style.legendLine}>
@@ -136,13 +125,16 @@ const MealDetailsModal: React.FC<QRCodeModal> = ({foodList, index, date}) => {
             </View>
 
             <View style={{flex: 1}}>
-              <TableComponent data={foodList} />
+              <TableComponent data={meal.foodList} />
             </View>
 
             <View>
               <TouchableOpacity
                 style={style.deleteButton}
-                onPress={() => console.log('Delete button pressed')}>
+                onPress={() => {
+                  setVisible(false);
+                  onDeleteMeal(meal); // Use the passed callback
+                }}>
                 <Text style={style.deleteButtonText}>Delete Meal</Text>
               </TouchableOpacity>
             </View>

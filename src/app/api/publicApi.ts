@@ -1,6 +1,7 @@
 import axios from 'axios';
+import {Meal} from './domain';
 
-const baseURL = 'http://192.168.100.12:8080';
+const baseURL = 'http://localhost:8088';
 
 export const parseDate = (date: Date) => {
   return (
@@ -20,6 +21,15 @@ export async function getMeals(date) {
       },
     });
     return response.data; // assuming the meals are in the data property
+  } catch (error) {
+    console.error(error);
+    throw error; // re-throw the error so that it can be caught and handled in the component
+  }
+}
+
+export async function deleteMeal(meal: Meal) {
+  try {
+    const response = await axios.delete(baseURL + '/meals/' + meal.id);
   } catch (error) {
     console.error(error);
     throw error; // re-throw the error so that it can be caught and handled in the component
