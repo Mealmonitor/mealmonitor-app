@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {Meal} from './domain';
 
-const baseURL = 'http://localhost:8088';
+const baseURL = 'https://api.mealmonitor.galitianu.com';
 
 export const parseDate = (date: Date) => {
   return (

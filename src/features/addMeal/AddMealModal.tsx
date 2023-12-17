@@ -1,5 +1,5 @@
 import {Link, useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -38,6 +38,12 @@ const AddMealModal: React.FC<QRCodeModal> = () => {
 
   const handlePress = async () => {
     dispatch({type: 'notifications/showCoinsModal'});
+  };
+
+  const navigation = useNavigation();
+  const handleBarcodePress = () => {
+    dispatch({type: 'notifications/hideCoinsModal'});
+    navigation.navigate('Barcode');
   };
 
   return (
@@ -83,7 +89,9 @@ const AddMealModal: React.FC<QRCodeModal> = () => {
                     style={style.input}
                     placeholder="Search for Food"
                   />
-                  <BarcodeIcon size={44}></BarcodeIcon>
+                  <TouchableOpacity onPress={handleBarcodePress}>
+                    <BarcodeIcon size={44}></BarcodeIcon>
+                  </TouchableOpacity>
                 </View>
 
                 <View style={style.bottomRectangle}>
@@ -208,7 +216,6 @@ const style = StyleSheet.create({
     marginVertical: 9,
     borderRadius: 10,
   },
-  closeIcon: {position: 'absolute', right: 5},
 });
 
 export default AddMealModal;
