@@ -12,6 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import {BarCodeScanner} from 'expo-barcode-scanner';
 import {Vibration} from 'react-native';
 import {getProductByBarcode} from '../api/publicApi';
+import {flexbox} from 'native-base/lib/typescript/theme/styled-system';
 
 const BarcodeScreen = () => {
   const navigation = useNavigation();
@@ -72,37 +73,51 @@ const BarcodeScreen = () => {
               style={StyleSheet.absoluteFillObject}
             />
           </View>
-
-          {product && (
-            <View style={style.productDetails}>
-              <View style={style.productDetailRow}>
-                <Text style={style.detailLabel}>Name:</Text>
-                <Text style={style.detailValue}>{product.name || '-'}</Text>
+          <View style={style.bottomContainer}>
+            {product && (
+              <View style={style.productDetails}>
+                <View style={style.productDetailRow}>
+                  <Text style={style.detailLabel}>Name:</Text>
+                  <Text style={style.detailValue}>{product.name || '-'}</Text>
+                </View>
+                <View style={style.productDetailRow}>
+                  <Text style={style.detailLabel}>Brand:</Text>
+                  <Text style={style.detailValue}>{product.brand || '-'}</Text>
+                </View>
+                <View style={style.productDetailRow}>
+                  <Text style={style.detailLabel}>Quantity:</Text>
+                  <Text style={style.detailValue}>
+                    {product.recommendedQuantity || '-'}
+                  </Text>
+                </View>
+                <View style={style.productDetailRow}>
+                  <Text style={style.detailLabel}>Calories:</Text>
+                  <Text style={style.detailValue}>
+                    {product.caloriesPerCent || '-'}
+                  </Text>
+                </View>
               </View>
-              <View style={style.productDetailRow}>
-                <Text style={style.detailLabel}>Brand:</Text>
-                <Text style={style.detailValue}>{product.brand || '-'}</Text>
+            )}
+            {scanned && (
+              <View style={style.buttonContainer}>
+                <TouchableOpacity
+                  style={style.backButton}
+                  onPress={() => {
+                    setScanned(false);
+                    setProduct(null);
+                  }}>
+                  <Text className="text-sm font-semibold text-black">
+                    Retry
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={style.acceptButton} onPress={() => {}}>
+                  <Text className="text-sm font-semibold text-[#B8D5CD]">
+                    Accept
+                  </Text>
+                </TouchableOpacity>
               </View>
-              <View style={style.productDetailRow}>
-                <Text style={style.detailLabel}>Quantity:</Text>
-                <Text style={style.detailValue}>
-                  {product.recommendedQuantity || '-'}
-                </Text>
-              </View>
-              <View style={style.productDetailRow}>
-                <Text style={style.detailLabel}>Calories:</Text>
-                <Text style={style.detailValue}>
-                  {product.caloriesPerCent || '-'}
-                </Text>
-              </View>
-            </View>
-          )}
-          {scanned && (
-            <Button
-              title={'Tap to Scan Again'}
-              onPress={() => setScanned(false)}
-            />
-          )}
+            )}
+          </View>
         </View>
       </View>
     </>
@@ -117,7 +132,7 @@ export const style = StyleSheet.create({
   },
   container: {backgroundColor: 'white'},
   centeredContainer: {
-    justifyContent: 'center', // Center children vertically
+    justifyContent: 'space-between', // Center children vertically
     alignItems: 'center', // Center children horizontally
     marginHorizontal: 25,
   },
@@ -147,6 +162,7 @@ export const style = StyleSheet.create({
     backgroundColor: 'white',
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
+    justifyContent: 'space-between',
   },
   barcodeBox: {
     marginTop: 25,
@@ -173,7 +189,7 @@ export const style = StyleSheet.create({
     backgroundColor: 'white', // White background
     padding: 10, // Reduced padding around the content
     borderRadius: 25, // Rounded corners
-    marginVertical: 10,
+    marginVertical: 25,
     width: '100%',
     alignSelf: 'center', // Center the box horizontally
     borderWidth: 1, // Width of the border
@@ -203,6 +219,55 @@ export const style = StyleSheet.create({
     flex: 1, // Take up remaining space
     textAlign: 'right', // Align text to the right
     fontWeight: 'bold',
+  },
+  backButton: {
+    // h-[44px] items-center justify-center rounded-lg py-3 bg-white
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+
+    borderRadius: 10,
+    borderColor: '#2E856E',
+    borderWidth: 1,
+    shadowColor: '#000', // Shadow for a "raised" effect
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    flexGrow: 1,
+  },
+  acceptButton: {
+    // h-[44px] items-center justify-center rounded-lg py-3 bg-white
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#2E856E',
+
+    borderRadius: 10,
+    shadowColor: '#000', // Shadow for a "raised" effect
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    flexGrow: 1,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 25,
+  },
+  bottomContainer: {
+    width: '100%',
+    height: 'auto',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   },
 });
 
