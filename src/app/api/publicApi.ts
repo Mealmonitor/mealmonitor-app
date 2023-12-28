@@ -1,7 +1,7 @@
 import axios from 'axios';
-import {Meal} from './domain';
+import {Meal, ProductDto} from './domain';
 
-const baseURL = 'https://api.mealmonitor.galitianu.com';
+const baseURL = 'http://192.168.1.119:8088';
 
 export const parseDate = (date: Date) => {
   return (
@@ -30,6 +30,17 @@ export async function getMeals(date) {
 export async function deleteMeal(meal: Meal) {
   try {
     const response = await axios.delete(baseURL + '/meals/' + meal.id);
+  } catch (error) {
+    console.error(error);
+    throw error; // re-throw the error so that it can be caught and handled in the component
+  }
+}
+
+export async function getProductByBarcode(barCode: string) {
+  try {
+    const response = await axios.get(baseURL + '/products/' + barCode);
+    console.log(response.data);
+    return response.data as ProductDto;
   } catch (error) {
     console.error(error);
     throw error; // re-throw the error so that it can be caught and handled in the component

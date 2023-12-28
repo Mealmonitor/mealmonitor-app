@@ -22,3 +22,14 @@ export interface Food {
   carbs: number;
   fats: number;
 }
+
+export interface ProductDto {
+  barcode: string;
+  name: string;
+  brand: string;
+  recommendedQuantity: string;
+  caloriesPerCent: number;
+  proteinsPerCent: number;
+  carbsPerCent: number;
+  fatsPerCent: number;
+}
