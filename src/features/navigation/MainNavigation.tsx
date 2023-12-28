@@ -2,9 +2,11 @@ import React from 'react';
 import {KeyboardAvoidingView, Platform} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import PublicTabs from './components/PublicTabs';
+import BarcodeScreen from '../../app/screens/BarcodeScreen';
 
 export type PublicStackParamList = {
   Login: undefined;
+  Barcode: undefined;
   Register: undefined;
   //   ConfirmEmail: {values: SignupProps | LoginValues};
   AGB: undefined;
@@ -38,6 +40,7 @@ const MainNavigation = () => {
         {/* <Stack.Screen name="Register" component={SignUpScreen} /> */}
 
         <Stack.Screen name="Public" component={PublicTabs} />
+        <Stack.Screen name="Barcode" component={BarcodeScreen} />
 
         {/* <Stack.Screen name="ConfirmEmail" component={EmailVerificationScreen} />
 
