@@ -26,6 +26,7 @@ import BarcodeIcon from '../../../assets/svg/BarcodeIcon';
 import CloseIcon from '../../../assets/svg/CloseIcon';
 import {AppDispatch, RootState} from '../../app/store/store';
 import {EditFoodModal} from '../editFood/EditFoodModal';
+import {Food} from '../../app/api/domain';
 
 interface QRCodeModal {}
 
@@ -33,7 +34,68 @@ const AddMealModal: React.FC<QRCodeModal> = () => {
   const windowHeight = Dimensions.get('window').height;
   const dispatch = useDispatch<AppDispatch>();
 
-  const [foodList, setFoodList] = useState([]);
+  const [foodList, setFoodList] = useState<Food[]>([
+    {
+      id: '1',
+      version: 1,
+      created: new Date(),
+      updated: new Date(),
+      barCode: '123456789',
+      name: 'Apple',
+      brand: 'Organic',
+      unitOfMeasurement: 'g',
+      quantity: 23,
+      calories: 52,
+      proteins: 0.26,
+      carbs: 14,
+      fats: 0.17,
+    },
+    {
+      id: '2',
+      version: 1,
+      created: new Date(),
+      updated: new Date(),
+      barCode: '987654321',
+      name: 'Banana',
+      brand: 'Nature',
+      unitOfMeasurement: 'g',
+      quantity: 10,
+      calories: 105,
+      proteins: 1.3,
+      carbs: 27,
+      fats: 0.3,
+    },
+    {
+      id: '3',
+      version: 1,
+      created: new Date(),
+      updated: new Date(),
+      barCode: '456789012',
+      name: 'Broccoli',
+      brand: 'Fresh Farms',
+      unitOfMeasurement: 'g',
+      quantity: 100,
+      calories: 55,
+      proteins: 3.7,
+      carbs: 11.2,
+      fats: 0.6,
+    },
+    {
+      id: '4',
+      version: 1,
+      created: new Date(),
+      updated: new Date(),
+      barCode: '456789012',
+      name: 'Steak',
+      brand: 'Sergiana',
+      unitOfMeasurement: 'g',
+      quantity: 120,
+      calories: 55,
+      proteins: 3.7,
+      carbs: 11.2,
+      fats: 0.6,
+    },
+  ]);
 
   const showModal = useSelector(
     (state: RootState) => state.notification.showCoinsModal,
@@ -98,10 +160,21 @@ const AddMealModal: React.FC<QRCodeModal> = () => {
                 </View>
 
                 <View>
-                  {/* {error && <Text>Error fetching meals: {error.message}</Text>} */}
-                  {foodList.map((food, index) => {
+                  {foodList.map((food: Food, index) => {
                     return (
-                      <EditFoodModal index={index} food={food}></EditFoodModal>
+                      <View key={index} style={style.listItem}>
+                        <Text style={style.foodName}>
+                          {food.name}
+                          {'\n'}
+                          <Text style={style.brand}>{food.brand}</Text>
+                        </Text>
+                        <View style={style.quantityContainer}>
+                          <Text style={style.quantity}>{food.quantity}</Text>
+                          <Text style={style.unitOfMeasurement}>
+                            {food.unitOfMeasurement}
+                          </Text>
+                        </View>
+                      </View>
                     );
                   })}
                 </View>
@@ -109,7 +182,16 @@ const AddMealModal: React.FC<QRCodeModal> = () => {
                 <View style={style.bottomRectangle}>
                   <View style={style.energyContainer}>
                     <Text style={style.energyContainerText}>Total Energy</Text>
-                    <Text style={style.energyContainerText}>120 kCal</Text>
+                    <Text style={style.energyContainerText}>
+                      {Math.round(
+                        foodList.reduce(
+                          (sum, current) =>
+                            sum + (current.calories * current.quantity) / 100,
+                          0,
+                        ),
+                      )}{' '}
+                      kCal
+                    </Text>
                   </View>
                   <View>
                     <TouchableOpacity
@@ -221,6 +303,37 @@ const style = StyleSheet.create({
     marginHorizontal: 30,
     marginVertical: 9,
     borderRadius: 10,
+  },
+  listItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingBottom: 5,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#ccc', // Add a border to separate items
+  },
+  foodName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  quantity: {
+    fontSize: 16,
+    color: '#555',
+  },
+  quantityContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  unitOfMeasurement: {
+    fontSize: 16,
+    color: '#555',
+    marginLeft: 5, // Add some space between quantity and unit
+  },
+  brand: {
+    fontSize: 14,
+    color: '#888',
   },
 });
 
