@@ -25,12 +25,15 @@ import AddMealIcon from '../../../assets/svg/AddMealIcon';
 import BarcodeIcon from '../../../assets/svg/BarcodeIcon';
 import CloseIcon from '../../../assets/svg/CloseIcon';
 import {AppDispatch, RootState} from '../../app/store/store';
+import {EditFoodModal} from '../editFood/EditFoodModal';
 
 interface QRCodeModal {}
 
 const AddMealModal: React.FC<QRCodeModal> = () => {
   const windowHeight = Dimensions.get('window').height;
   const dispatch = useDispatch<AppDispatch>();
+
+  const [foodList, setFoodList] = useState([]);
 
   const showModal = useSelector(
     (state: RootState) => state.notification.showCoinsModal,
@@ -94,18 +97,21 @@ const AddMealModal: React.FC<QRCodeModal> = () => {
                   </TouchableOpacity>
                 </View>
 
+                <View>
+                  {/* {error && <Text>Error fetching meals: {error.message}</Text>} */}
+                  {foodList.map((food, index) => {
+                    return (
+                      <EditFoodModal index={index} food={food}></EditFoodModal>
+                    );
+                  })}
+                </View>
+
                 <View style={style.bottomRectangle}>
                   <View style={style.energyContainer}>
                     <Text style={style.energyContainerText}>Total Energy</Text>
                     <Text style={style.energyContainerText}>120 kCal</Text>
                   </View>
                   <View>
-                    {/* <TouchableOpacity
-                      style={style.doneButton}
-                      hitSlop={{top: 5, bottom: 20, left: 20, right: 20}}
-                      onPress={() => console.log('Done pressed!')}>
-                      <Text style={style.buttonText}>Done</Text>
-                    </TouchableOpacity> */}
                     <TouchableOpacity
                       style={style.backButton}
                       onPress={() => {}}>
