@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
-import {useState} from 'react';
-import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
-import {CheckBox} from 'react-native-checkbox';
+import React, {useState} from 'react';
+import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
+import Checkbox from 'expo-checkbox';
 
 const AddGoal = () => {
   const navigation = useNavigation();
@@ -22,7 +22,7 @@ const AddGoal = () => {
         <Text style={style.title}>Choose goal:</Text>
 
         <View style={style.box}>
-          <CheckBox
+          <Checkbox
             value={isSelected}
             onValueChange={setSelection}
             style={style.checkbox}
@@ -43,11 +43,11 @@ const AddGoal = () => {
             onPress={handlePublicPress}>
             <Text style={style.backButtonText}>Back</Text>
           </TouchableOpacity>
-          {/* <TouchableOpacity
+          <TouchableOpacity
             style={[style.nextButton, {opacity: isSelected ? 1 : 0.4}]}
             disabled={!isSelected}>
             <Text style={style.nextButtonText}>Next</Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </View>
       </View>
     </>
