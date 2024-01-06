@@ -1,12 +1,25 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
-import {RadioButton} from 'react-native-paper';
+import React, {useEffect, useState} from 'react';
+import {
+  Text,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 
-const AddGoal = () => {
+const AddMetabolism = () => {
   const navigation = useNavigation();
 
-  const [selectedValue, setSelectedValue] = useState(null);
+  const [selectedMetabolism, setSelectedMetabolism] = useState(null);
+  const [weight, setWeight] = useState(NaN);
+
+  const [formComplete, setFormComplete] = useState(false);
+
+  useEffect(() => {
+    setFormComplete(!Number.isNaN(weight) && selectedMetabolism != null);
+  }, [weight, selectedMetabolism]);
 
   return (
     <>
@@ -15,36 +28,37 @@ const AddGoal = () => {
       </View>
 
       <View style={style.modalLikeContainer}>
-        <Text style={style.title}>Choose goal</Text>
+        <Text style={style.title}>Complete Profile</Text>
 
-        <View style={style.box}>
-          <RadioButton
-            value="loseWeight"
-            status={selectedValue === 'loseWeight' ? 'checked' : 'unchecked'}
-            onPress={() => setSelectedValue('loseWeight')}
-            color="#2E856E"
-          />
-          <Text style={style.boxText}>Lose weight</Text>
+        <View style={style.container}>
+          <Text style={style.containerText}>Weight</Text>
+          <View style={style.box}>
+            <TextInput
+              keyboardType="numeric"
+              style={style.input}
+              placeholder="0"
+              onChangeText={newText => setWeight(parseInt(newText))}
+            />
+          </View>
         </View>
-        <View style={style.box}>
-          <RadioButton
-            value="increaseMuscleMass"
-            status={
-              selectedValue === 'increaseMuscleMass' ? 'checked' : 'unchecked'
-            }
-            onPress={() => setSelectedValue('increaseMuscleMass')}
-            color="#2E856E"
-          />
-          <Text style={style.boxText}>Increase muscle mass</Text>
-        </View>
-        <View style={style.box}>
-          <RadioButton
-            value="gainWeight"
-            status={selectedValue === 'gainWeight' ? 'checked' : 'unchecked'}
-            onPress={() => setSelectedValue('gainWeight')}
-            color="#2E856E"
-          />
-          <Text style={style.boxText}>Gain weight</Text>
+        <View style={style.container}>
+          <Text style={style.containerText}>Metabolism</Text>
+          <View style={style.box}>
+            <Picker
+              style={style.picker}
+              selectedValue={selectedMetabolism}
+              onValueChange={(itemValue, itemIndex) =>
+                setSelectedMetabolism(itemValue)
+              }>
+              <Picker.Item style={style.input} label="Slow" value="Slow" />
+              <Picker.Item
+                style={style.input}
+                label="Moderate"
+                value="Moderate"
+              />
+              <Picker.Item style={style.input} label="Fast" value="Fast" />
+            </Picker>
+          </View>
         </View>
 
         <View style={style.ButtonContainer}>
@@ -56,10 +70,10 @@ const AddGoal = () => {
             <Text style={style.backButtonText}>Back</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[style.nextButton, {opacity: selectedValue ? 1 : 0.4}]}
-            disabled={!selectedValue}
+            style={[style.nextButton, {opacity: formComplete ? 1 : 0.4}]}
+            disabled={!formComplete}
             onPress={() => {
-              navigation.navigate('AddMetabolism');
+              // Handle the 'Next' button click event here
             }}>
             <Text style={style.nextButtonText}>Next</Text>
           </TouchableOpacity>
@@ -87,18 +101,24 @@ const style = StyleSheet.create({
   title: {
     color: '#2E856E',
     fontSize: 24,
-    fontStyle: 'normal',
     fontWeight: 'bold',
     paddingTop: 25,
     paddingBottom: 20,
     textAlign: 'center',
   },
+  container: {
+    flexDirection: 'column',
+    marginHorizontal: 70,
+    marginVertical: 10,
+  },
+  containerText: {
+    fontSize: 20,
+    fontWeight: '500',
+    color: '#444444',
+  },
   box: {
-    padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: 30,
-    marginVertical: 8,
     borderRadius: 8,
     borderWidth: 2,
     borderColor: '#AAA',
@@ -106,6 +126,16 @@ const style = StyleSheet.create({
   boxText: {
     fontSize: 20,
     marginLeft: 10,
+  },
+  input: {
+    padding: 10,
+    flexGrow: 1,
+    fontWeight: '400',
+    fontSize: 20,
+  },
+  picker: {
+    height: 20,
+    width: 250,
   },
 
   ButtonContainer: {
@@ -163,4 +193,4 @@ const style = StyleSheet.create({
   },
 });
 
-export default AddGoal;
+export default AddMetabolism;
