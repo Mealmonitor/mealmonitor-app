@@ -38,8 +38,7 @@ interface QRCodeModal {
   route: any;
 }
 type AddMealScreenRouteParams = {
-  newFood: Food; // replace 'string' with the actual type of 'newFood'
-  // add other params here if there are any
+  newFood: Food;
 };
 
 const AddMealScreen: React.FC<QRCodeModal> = () => {
@@ -47,13 +46,10 @@ const AddMealScreen: React.FC<QRCodeModal> = () => {
   const route =
     useRoute<RouteProp<{params: AddMealScreenRouteParams}, 'params'>>();
 
-  // Access route parameters
-
   const [foodList, setFoodList] = useState<Food[]>([]);
 
   const navigation = useNavigation();
   const handleBarcodePress = () => {
-    dispatch({type: 'notifications/hideCoinsModal'});
     navigation.navigate('Barcode');
   };
 
@@ -67,6 +63,7 @@ const AddMealScreen: React.FC<QRCodeModal> = () => {
       foodList: foodList,
     };
     await createMeal(meal);
+    navigation.navigate('Public');
   };
 
   React.useEffect(() => {

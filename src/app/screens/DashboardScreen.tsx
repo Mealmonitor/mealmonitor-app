@@ -8,6 +8,7 @@ import ArrowBack from '../../../assets/svg/ArrowBack';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MealDetailsModal from '../../features/mealDetails/MealDetailsModal';
 import DatePicker from 'react-native-date-picker';
+import {useIsFocused} from '@react-navigation/native';
 
 const subtractDaysFromDate = (currentDate, daysToSubtract) => {
   daysToSubtract = daysToSubtract || 0;
@@ -17,11 +18,13 @@ const subtractDaysFromDate = (currentDate, daysToSubtract) => {
   return pastDate;
 };
 
-const DashboardScreen = () => {
+const DashboardScreen = ({mealToAdd}) => {
   const [mealList, setMealList] = useState<Meal[]>([]);
   const [error, setError] = useState(null);
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
+
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     async function fetchMeals(date) {
@@ -32,8 +35,11 @@ const DashboardScreen = () => {
         setError(err);
       }
     }
-    fetchMeals(date);
-  }, [date]);
+
+    if (isFocused) {
+      fetchMeals(date);
+    }
+  }, [date, isFocused]); // Depend on both date and focus state
 
   const handleMealDeletion = async (meal: Meal) => {
     try {
