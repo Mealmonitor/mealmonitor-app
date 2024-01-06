@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Food, ProductDto} from '../../app/api/domain';
 import {
   View,
@@ -6,26 +6,32 @@ import {
   Modal,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
-  ScrollView,
-  Alert,
   TextInput,
 } from 'react-native';
 import CloseIcon from '../../../assets/svg/CloseIcon';
 import UnitOfMeasurementDropdown from './UnitOfMeasurementDropdown';
+import {useNavigation} from '@react-navigation/native';
 
 interface AddFoodModal {
   product: ProductDto;
+  onAddFood: (food: Food) => void;
 }
 
-export const AddFoodModal: React.FC<AddFoodModal> = ({product}) => {
+export const AddFoodModal: React.FC<AddFoodModal> = ({product, onAddFood}) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [unitOfMeasurement, setUnitOfMeasurement] = useState(null);
+  const [quantity, setQuantity] = useState(null);
+  const [formComplete, setFormComplete] = useState(false);
+  const navigation = useNavigation();
 
   const dropdownData = [
     {label: 'g', value: 'g'},
     {label: 'L', value: 'L'},
   ];
+
+  useEffect(() => {
+    setFormComplete(!Number.isNaN(quantity) && unitOfMeasurement);
+  }, [quantity, unitOfMeasurement]);
 
   return (
     <View style={style.acceptContainer}>
@@ -56,6 +62,7 @@ export const AddFoodModal: React.FC<AddFoodModal> = ({product}) => {
                   keyboardType="numeric"
                   style={style.input}
                   placeholder="0"
+                  onChangeText={newText => setQuantity(parseInt(newText))}
                 />
                 <View style={style.dropdownStyle}>
                   <UnitOfMeasurementDropdown
@@ -68,8 +75,25 @@ export const AddFoodModal: React.FC<AddFoodModal> = ({product}) => {
               </View>
               <TouchableOpacity
                 style={style.doneButton}
+                disabled={!formComplete}
                 onPress={() => {
                   setShowEditModal(false);
+                  const newFood: Food = {
+                    id: '',
+                    version: 0,
+                    created: undefined,
+                    updated: undefined,
+                    barCode: product.barcode,
+                    name: product.name,
+                    brand: product.brand,
+                    unitOfMeasurement: unitOfMeasurement,
+                    quantity: quantity,
+                    calories: product.caloriesPerCent,
+                    proteins: product.proteinsPerCent,
+                    carbs: product.carbsPerCent,
+                    fats: product.fatsPerCent,
+                  };
+                  onAddFood(newFood);
                 }}>
                 <Text className="text-sm font-semibold text-[#B8D5CD]">
                   Done

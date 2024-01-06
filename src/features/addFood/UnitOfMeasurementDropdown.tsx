@@ -35,7 +35,7 @@ const UnitOfMeasurementDropdown = React.forwardRef((props: any, ref: any) => {
         data={props.data} // Set the dropdown data
         labelField="label"
         valueField="value"
-        placeholder={'Select unit'}
+        placeholder={''}
         value={props.values}
         onChange={item => {
           props.setValues(item.value); // Ensure this function handles the selected value properly

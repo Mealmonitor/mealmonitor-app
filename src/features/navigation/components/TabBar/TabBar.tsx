@@ -4,10 +4,7 @@ import {MaterialTopTabBarProps} from '@react-navigation/material-top-tabs';
 
 import {tabBarStyle} from './TabBarStyles';
 import {twFullConfig} from '../../../../utils/tailwindConfig';
-import AddMealModal from '../../../addMeal/AddMealModal';
-// import { RootState } from "../../../store/store";
-// import { twFullConfig } from "../../../../utils/tailwind/tailwindConfig";
-// import QRCodeModal from "../../../../features/qrCode/QRCodeModal";
+import AddMealIcon from '../../../../../assets/svg/AddMealIcon';
 
 const TabBar = ({state, descriptors, navigation}: MaterialTopTabBarProps) => {
   console.log(state.routes);
@@ -40,7 +37,15 @@ const TabBar = ({state, descriptors, navigation}: MaterialTopTabBarProps) => {
         if (index === 1) {
           return (
             <React.Fragment key="key">
-              <AddMealModal></AddMealModal>
+              <TouchableOpacity
+                hitSlop={{top: 5, bottom: 20, left: 20, right: 20}}
+                onPress={() => {
+                  navigation.navigate('AddMeal');
+                }}
+                style={style.icon}
+                activeOpacity={1}>
+                <AddMealIcon size={55} />
+              </TouchableOpacity>
 
               <TouchableOpacity
                 hitSlop={{top: 5, bottom: 20, left: 20, right: 20}}

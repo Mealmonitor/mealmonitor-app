@@ -6,6 +6,7 @@ import {BarCodeScanner} from 'expo-barcode-scanner';
 import {Vibration} from 'react-native';
 import {getProductByBarcode} from '../api/publicApi';
 import {AddFoodModal} from '../../features/addFood/AddFoodModal';
+import {Food} from '../api/domain';
 
 const BarcodeScreen = () => {
   const navigation = useNavigation();
@@ -30,6 +31,14 @@ const BarcodeScreen = () => {
     setProduct(product);
   };
 
+  const handleAddFood = (food: Food) => {
+    navigation.navigate({
+      name: 'AddMeal',
+      params: {newFood: food},
+      merge: true,
+    });
+  };
+
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
   }
@@ -45,7 +54,7 @@ const BarcodeScreen = () => {
             <TouchableOpacity
               hitSlop={15}
               onPress={() => {
-                navigation.navigate('Public');
+                navigation.navigate('AddMeal');
               }}>
               <ArrowBack />
             </TouchableOpacity>
@@ -97,7 +106,9 @@ const BarcodeScreen = () => {
                     Retry
                   </Text>
                 </TouchableOpacity>
-                <AddFoodModal product={product}></AddFoodModal>
+                <AddFoodModal
+                  product={product}
+                  onAddFood={handleAddFood}></AddFoodModal>
               </View>
             )}
           </View>
