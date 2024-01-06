@@ -1,8 +1,14 @@
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import MyProfileIcon from '../../../assets/svg/MyProfileIcon';
 import {Center} from 'native-base';
+import {useNavigation} from '@react-navigation/native';
 
 const MyProfileScreen = () => {
+  const navigation = useNavigation();
+  const handleAddGoalPress = () => {
+    navigation.navigate('AddGoal');
+  };
+
   return (
     <>
       <View className="pt-12">
@@ -26,6 +32,11 @@ const MyProfileScreen = () => {
             give us some information about you to begin your health improvement
             journey!
           </Text>
+          <TouchableOpacity
+            style={style.setGoalButton}
+            onPress={handleAddGoalPress}>
+            <Text style={style.setGoalText}>Set a goal</Text>
+          </TouchableOpacity>
         </View>
         <View>
           <TouchableOpacity style={style.logoutButton}>
@@ -95,7 +106,7 @@ const style = StyleSheet.create({
   },
 
   logoutButton: {
-    backgroundColor: '#2E856E',
+    backgroundColor: '#5CA08E',
     padding: 10,
     borderRadius: 20,
     alignItems: 'center',
@@ -104,6 +115,20 @@ const style = StyleSheet.create({
     marginRight: 250,
   },
   logoutButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
+  setGoalButton: {
+    backgroundColor: '#2E856E',
+    paddingHorizontal: 35,
+    paddingVertical: 10,
+    borderRadius: 20,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  setGoalText: {
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
