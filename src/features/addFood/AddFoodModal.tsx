@@ -16,18 +16,16 @@ interface AddFoodModal {
   product: ProductDto;
   onAddFood: (food: Food) => void;
 }
-
+export const dropdownData = [
+  {label: 'g', value: 'g'},
+  {label: 'ml', value: 'ml'},
+];
 export const AddFoodModal: React.FC<AddFoodModal> = ({product, onAddFood}) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [unitOfMeasurement, setUnitOfMeasurement] = useState(null);
   const [quantity, setQuantity] = useState(null);
   const [formComplete, setFormComplete] = useState(false);
   const navigation = useNavigation();
-
-  const dropdownData = [
-    {label: 'g', value: 'g'},
-    {label: 'L', value: 'L'},
-  ];
 
   useEffect(() => {
     setFormComplete(!Number.isNaN(quantity) && unitOfMeasurement);

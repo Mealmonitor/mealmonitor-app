@@ -55,3 +55,14 @@ export async function createMeal(meal: Meal) {
     throw error; // re-throw the error so that it can be caught and handled in the component
   }
 }
+
+export async function searchProduct(query: string) {
+  try {
+    const response = await axios.get(baseURL + '/products/search/' + query);
+    console.log(response.data);
+    return response.data as ProductDto[];
+  } catch (error) {
+    console.error(error);
+    throw error; // re-throw the error so that it can be caught and handled in the component
+  }
+}

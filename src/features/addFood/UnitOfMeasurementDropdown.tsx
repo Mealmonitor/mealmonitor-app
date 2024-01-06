@@ -50,7 +50,7 @@ const UnitOfMeasurementDropdown = React.forwardRef((props: any, ref: any) => {
 const styles = StyleSheet.create({
   dropdown: {
     height: 40,
-    width: 50,
+    width: 55,
     backgroundColor: 'white',
     borderRadius: 8,
     paddingLeft: 8,

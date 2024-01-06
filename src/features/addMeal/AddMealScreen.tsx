@@ -1,38 +1,26 @@
-import {
-  Link,
-  RouteProp,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
-  Modal,
   TouchableOpacity,
   StyleSheet,
   Dimensions,
   ScrollView,
-  ImageBackground,
-  Pressable,
   TextInput,
+  Modal,
 } from 'react-native';
-import {AnimatedCircularProgress} from 'react-native-circular-progress';
 
-import QRCode from 'react-native-qrcode-svg';
-
-import {useDispatch, useSelector} from 'react-redux';
-import * as Brightness from 'expo-brightness';
-import {ChevronDownIcon, ChevronUpIcon} from 'native-base';
+import {useDispatch} from 'react-redux';
 import {twFullConfig} from '../../utils/tailwindConfig';
 import ArrowBack from '../../../assets/svg/ArrowBack';
-import AddMealIcon from '../../../assets/svg/AddMealIcon';
 import BarcodeIcon from '../../../assets/svg/BarcodeIcon';
+import {AppDispatch} from '../../app/store/store';
+import {Food, Meal, ProductDto} from '../../app/api/domain';
+import {createMeal, searchProduct} from '../../app/api/publicApi';
+import UnitOfMeasurementDropdown from '../addFood/UnitOfMeasurementDropdown';
 import CloseIcon from '../../../assets/svg/CloseIcon';
-import {AppDispatch, RootState} from '../../app/store/store';
-import {EditFoodModal} from '../editFood/EditFoodModal';
-import {Food, Meal} from '../../app/api/domain';
-import {createMeal} from '../../app/api/publicApi';
+import {dropdownData} from '../addFood/AddFoodModal';
 
 interface QRCodeModal {
   route: any;
@@ -47,12 +35,19 @@ const AddMealScreen: React.FC<QRCodeModal> = () => {
     useRoute<RouteProp<{params: AddMealScreenRouteParams}, 'params'>>();
 
   const [foodList, setFoodList] = useState<Food[]>([]);
-
+  const [resultList, setResultList] = useState<ProductDto[]>([]);
+  const [query, setQuery] = useState<string>('');
+  const [unitOfMeasurement, setUnitOfMeasurement] = useState(null);
+  const [quantity, setQuantity] = useState(null);
+  const [formComplete, setFormComplete] = useState(false);
+  const [product, setProduct] = useState<ProductDto>(null);
   const navigation = useNavigation();
   const handleBarcodePress = () => {
     navigation.navigate('Barcode');
   };
-
+  useEffect(() => {
+    setFormComplete(!Number.isNaN(quantity) && unitOfMeasurement);
+  }, [quantity, unitOfMeasurement]);
   const handleMealCreate = async () => {
     const meal: Meal = {
       id: '',
@@ -74,6 +69,22 @@ const AddMealScreen: React.FC<QRCodeModal> = () => {
       ]);
     }
   }, [route.params?.newFood]);
+
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  React.useEffect(() => {
+    const foo = async () => {
+      if (query.length >= 3) {
+        const rez = await searchProduct(query);
+        setResultList(rez);
+      }
+    };
+    foo();
+  }, [query]);
+
+  function onAddFood(newFood: Food) {
+    setFoodList(previousFoodList => [...previousFoodList, newFood]);
+  }
 
   return (
     <>
@@ -101,11 +112,102 @@ const AddMealScreen: React.FC<QRCodeModal> = () => {
             <Text style={style.header}>Add Food to your Meal</Text>
 
             <View style={style.inputContainer}>
-              <TextInput style={style.input} placeholder="Search for Food" />
+              <TextInput
+                style={style.input}
+                onChangeText={newText => setQuery(newText)}
+                placeholder="Search for Food"
+              />
               <TouchableOpacity onPress={handleBarcodePress}>
                 <BarcodeIcon size={44}></BarcodeIcon>
               </TouchableOpacity>
             </View>
+
+            {query.length >= 3 && (
+              <View style={style.searchResults}>
+                {resultList.map((result: ProductDto, index) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setProduct(result);
+                        setShowEditModal(true);
+                      }}>
+                      <Text style={style.resultTitle}>
+                        {result.name + ' by ' + result.brand}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+                <View>
+                  <Text style={style.resultNotFound}>
+                    My Food is not on the list
+                  </Text>
+                </View>
+              </View>
+            )}
+            <Modal
+              animationType="fade"
+              transparent={true}
+              visible={showEditModal}>
+              <View style={style.modalContainer}>
+                <View style={style.modal2}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setShowEditModal(false);
+                    }}
+                    className="mx-2 mt-2 self-end">
+                    <CloseIcon size={24} color={'black'} />
+                  </TouchableOpacity>
+                  <View className="">
+                    <Text className="color-[#006A4E] font-bold text-2xl text-center mb-4">
+                      Add Product
+                    </Text>
+                    <View style={style.inputContainer}>
+                      <TextInput
+                        keyboardType="numeric"
+                        style={style.input2}
+                        placeholder="0"
+                        onChangeText={newText => setQuantity(parseInt(newText))}
+                      />
+                      <View style={style.dropdownStyle}>
+                        <UnitOfMeasurementDropdown
+                          data={dropdownData}
+                          values={unitOfMeasurement}
+                          setValues={
+                            setUnitOfMeasurement
+                          }></UnitOfMeasurementDropdown>
+                      </View>
+                    </View>
+                    <TouchableOpacity
+                      style={style.doneButton2}
+                      disabled={!formComplete}
+                      onPress={() => {
+                        setShowEditModal(false);
+                        const newFood: Food = {
+                          id: '',
+                          version: 0,
+                          created: undefined,
+                          updated: undefined,
+                          barCode: product.barcode,
+                          name: product.name,
+                          brand: product.brand,
+                          unitOfMeasurement: unitOfMeasurement,
+                          quantity: quantity,
+                          calories: product.caloriesPerCent,
+                          proteins: product.proteinsPerCent,
+                          carbs: product.carbsPerCent,
+                          fats: product.fatsPerCent,
+                        };
+                        onAddFood(newFood);
+                        setQuery('');
+                      }}>
+                      <Text className="text-sm font-semibold text-[#B8D5CD]">
+                        Done
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </Modal>
             <ScrollView
               overScrollMode="always"
               contentContainerStyle={style.container}>
@@ -208,6 +310,13 @@ const style = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
   },
+  input2: {
+    height: 40,
+    width: '77%',
+    borderWidth: 2,
+    padding: 10,
+    borderRadius: 8,
+  },
   bottomRectangle: {
     position: 'absolute',
     bottom: 0,
@@ -294,6 +403,68 @@ const style = StyleSheet.create({
     marginHorizontal: 23,
     justifyContent: 'center',
     alignContent: 'center',
+  },
+  searchResults: {
+    display: 'flex',
+    padding: 16,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: 16,
+    borderRadius: 8,
+    borderWidth: 2,
+    backgroundColor: 'white',
+    marginHorizontal: 12,
+  },
+  resultTitle: {
+    fontSize: 16,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 24,
+  },
+  resultNotFound: {
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 24,
+    textDecorationLine: 'underline',
+    color: '#2E856E',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+
+  modal2: {
+    backgroundColor: '#fff',
+    padding: 20,
+    marginVertical: 20,
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowRadius: 40,
+    elevation: 5,
+    width: '90%',
+  },
+  dropdownStyle: {},
+  doneButton2: {
+    // h-[44px] items-center justify-center rounded-lg py-3 bg-white
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#2E856E',
+    marginHorizontal: 10,
+    marginVertical: 15,
+    borderRadius: 10,
+    shadowColor: '#000', // Shadow for a "raised" effect
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
 
