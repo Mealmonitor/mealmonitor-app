@@ -1,18 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-  Button,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import ArrowBack from '../../../assets/svg/ArrowBack';
 import {useNavigation} from '@react-navigation/native';
 import {BarCodeScanner} from 'expo-barcode-scanner';
 import {Vibration} from 'react-native';
 import {getProductByBarcode} from '../api/publicApi';
-import {flexbox} from 'native-base/lib/typescript/theme/styled-system';
+import {AddFoodModal} from '../../features/addFood/AddFoodModal';
+import {Food} from '../api/domain';
 
 const BarcodeScreen = () => {
   const navigation = useNavigation();
@@ -37,6 +31,14 @@ const BarcodeScreen = () => {
     setProduct(product);
   };
 
+  const handleAddFood = (food: Food) => {
+    navigation.navigate({
+      name: 'AddMeal',
+      params: {newFood: food},
+      merge: true,
+    });
+  };
+
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
   }
@@ -52,7 +54,7 @@ const BarcodeScreen = () => {
             <TouchableOpacity
               hitSlop={15}
               onPress={() => {
-                navigation.navigate('Public');
+                navigation.navigate('AddMeal');
               }}>
               <ArrowBack />
             </TouchableOpacity>
@@ -85,12 +87,6 @@ const BarcodeScreen = () => {
                   <Text style={style.detailValue}>{product.brand || '-'}</Text>
                 </View>
                 <View style={style.productDetailRow}>
-                  <Text style={style.detailLabel}>Quantity:</Text>
-                  <Text style={style.detailValue}>
-                    {product.recommendedQuantity || '-'}
-                  </Text>
-                </View>
-                <View style={style.productDetailRow}>
                   <Text style={style.detailLabel}>Calories:</Text>
                   <Text style={style.detailValue}>
                     {product.caloriesPerCent || '-'}
@@ -98,7 +94,7 @@ const BarcodeScreen = () => {
                 </View>
               </View>
             )}
-            {scanned && (
+            {scanned && product && (
               <View style={style.buttonContainer}>
                 <TouchableOpacity
                   style={style.backButton}
@@ -110,11 +106,9 @@ const BarcodeScreen = () => {
                     Retry
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={style.acceptButton} onPress={() => {}}>
-                  <Text className="text-sm font-semibold text-[#B8D5CD]">
-                    Accept
-                  </Text>
-                </TouchableOpacity>
+                <AddFoodModal
+                  product={product}
+                  onAddFood={handleAddFood}></AddFoodModal>
               </View>
             )}
           </View>
@@ -173,7 +167,7 @@ export const style = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: 25,
     backgroundColor: 'white',
-    borderWidth: 1, // Width of the border
+    borderWidth: 1,
     borderColor: 'black', // Black border color
     shadowColor: '#000', // Shadow for a "raised" effect
     shadowOffset: {
@@ -240,29 +234,13 @@ export const style = StyleSheet.create({
     elevation: 5,
     flexGrow: 1,
   },
-  acceptButton: {
-    // h-[44px] items-center justify-center rounded-lg py-3 bg-white
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#2E856E',
 
-    borderRadius: 10,
-    shadowColor: '#000', // Shadow for a "raised" effect
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    flexGrow: 1,
-  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 25,
   },
+
   bottomContainer: {
     width: '100%',
     height: 'auto',

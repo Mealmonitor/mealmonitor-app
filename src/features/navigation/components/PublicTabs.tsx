@@ -1,24 +1,12 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
-import {
-  View,
-  Animated,
-  ImageBackground,
-  Text,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  StyleSheet,
-} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import TabBar from './TabBar/TabBar';
 import DashboardScreen from '../../../app/screens/DashboardScreen';
 import MyProfileScreen from '../../../app/screens/MyProfileScreen';
-import SplashScreenLogo from '../../../../assets/svg/SplashScreenLogo';
-import ArrowBack from '../../../../assets/svg/ArrowBack';
 import DashboardIcon from '../../../../assets/svg/DashboardIcon';
-import AddMealIcon from '../../../../assets/svg/AddMealIcon';
 import MyProfileIcon from '../../../../assets/svg/MyProfileIcon';
 
 type MainNavigationParamList = {

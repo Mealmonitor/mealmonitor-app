@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {Meal, ProductDto} from './domain';
 
-const baseURL = 'https://api.mealmonitor.galitianu.com';
+const baseURL = 'http://192.168.1.103:8088';
 
 export const parseDate = (date: Date) => {
   return (
@@ -41,6 +41,26 @@ export async function getProductByBarcode(barCode: string) {
     const response = await axios.get(baseURL + '/products/' + barCode);
     console.log(response.data);
     return response.data as ProductDto;
+  } catch (error) {
+    console.error(error);
+    throw error; // re-throw the error so that it can be caught and handled in the component
+  }
+}
+
+export async function createMeal(meal: Meal) {
+  try {
+    const response = await axios.post(baseURL + '/meals', meal);
+  } catch (error) {
+    console.error(error);
+    throw error; // re-throw the error so that it can be caught and handled in the component
+  }
+}
+
+export async function searchProduct(query: string) {
+  try {
+    const response = await axios.get(baseURL + '/products/search/' + query);
+    console.log(response.data);
+    return response.data as ProductDto[];
   } catch (error) {
     console.error(error);
     throw error; // re-throw the error so that it can be caught and handled in the component
