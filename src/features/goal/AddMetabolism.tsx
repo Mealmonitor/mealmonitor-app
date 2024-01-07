@@ -73,9 +73,9 @@ const AddMetabolism = () => {
             style={[style.nextButton, {opacity: formComplete ? 1 : 0.4}]}
             disabled={!formComplete}
             onPress={() => {
-              // Handle the 'Next' button click event here
+              navigation.navigate('NewProfilePage');
             }}>
-            <Text style={style.nextButtonText}>Next</Text>
+            <Text style={style.nextButtonText}>Finish</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -166,7 +166,6 @@ const style = StyleSheet.create({
   backButtonText: {
     color: '#2E856E',
     textAlign: 'center',
-    fontFamily: 'Basic',
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '400',

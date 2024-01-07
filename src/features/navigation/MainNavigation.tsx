@@ -6,6 +6,7 @@ import BarcodeScreen from '../../app/screens/BarcodeScreen';
 import AddGoal from '../goal/AddGoal';
 import MyProfileScreen from '../../app/screens/MyProfileScreen';
 import AddMetabolism from '../goal/AddMetabolism';
+import NewProfilePage from '../goal/NewProfilePage';
 
 export type PublicStackParamList = {
   Login: undefined;
@@ -21,6 +22,7 @@ export type PublicStackParamList = {
   Public: undefined;
   AddGoal: undefined;
   AddMetabolism: undefined;
+  NewProfilePage: undefined;
 };
 const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
 
@@ -48,6 +50,7 @@ const MainNavigation = () => {
         <Stack.Screen name="Barcode" component={BarcodeScreen} />
         <Stack.Screen name="AddGoal" component={AddGoal} />
         <Stack.Screen name="AddMetabolism" component={AddMetabolism} />
+        <Stack.Screen name="NewProfilePage" component={NewProfilePage} />
 
         {/* <Stack.Screen name="ConfirmEmail" component={EmailVerificationScreen} />
 
