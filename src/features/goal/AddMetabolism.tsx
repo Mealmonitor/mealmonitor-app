@@ -8,6 +8,8 @@ import {
   TextInput,
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
+import UnitOfMeasurementDropdown from '../addFood/UnitOfMeasurementDropdown';
+import MetabolismDropdown from './MetabolismDropdown';
 
 const AddMetabolism = () => {
   const navigation = useNavigation();
@@ -20,6 +22,12 @@ const AddMetabolism = () => {
   useEffect(() => {
     setFormComplete(!Number.isNaN(weight) && selectedMetabolism != null);
   }, [weight, selectedMetabolism]);
+
+  const dropdownData = [
+    {label: 'Slow', value: 'Slow'},
+    {label: 'Moderate', value: 'Moderate'},
+    {label: 'Fast', value: 'Fast'},
+  ];
 
   return (
     <>
@@ -43,22 +51,11 @@ const AddMetabolism = () => {
         </View>
         <View style={style.container}>
           <Text style={style.containerText}>Metabolism</Text>
-          <View style={style.box}>
-            <Picker
-              style={style.picker}
-              selectedValue={selectedMetabolism}
-              onValueChange={(itemValue, itemIndex) =>
-                setSelectedMetabolism(itemValue)
-              }>
-              <Picker.Item style={style.input} label="Slow" value="Slow" />
-              <Picker.Item
-                style={style.input}
-                label="Moderate"
-                value="Moderate"
-              />
-              <Picker.Item style={style.input} label="Fast" value="Fast" />
-            </Picker>
-          </View>
+
+          <MetabolismDropdown
+            data={dropdownData}
+            values={selectedMetabolism}
+            setValues={setSelectedMetabolism}></MetabolismDropdown>
         </View>
 
         <View style={style.ButtonContainer}>

@@ -57,97 +57,96 @@ const NewProfilePage = () => {
         </View>
 
         <View style={style.centeredContainer}>
-          <Text style={style.energyText}>Total Energy Target: 3000 kCal</Text>
-          <View style={style.box}>
-            <View style={style.boxAlign}>
-              <Text style={style.text2}>Proteins</Text>
-              <Text style={style.text3}>Remaining</Text>
-            </View>
-            <View style={style.boxAlign}>
-              <Text style={style.text2}>{currentProteinsAmount} g</Text>
-              <Text style={style.text3}>{remainingProteins} g</Text>
-            </View>
-            <View style={{marginVertical: 10, marginHorizontal: 20}}>
-              <ProgressBar
-                progress={progressProteins}
-                color="#FFF"
-                style={{
-                  borderRadius: 10,
-                  backgroundColor: '#006A4E',
-                  height: 10,
-                }}
-              />
-            </View>
-          </View>
-          <View style={style.box}>
-            <View style={style.boxAlign}>
-              <Text style={style.text2}>Carbs</Text>
-              <Text style={style.text3}>Remaining</Text>
-            </View>
-            <View style={style.boxAlign}>
-              <Text style={style.text2}>{currentCarbsAmount} g</Text>
-              <Text style={style.text3}>{remainingCarbs} g</Text>
-            </View>
-            <View style={{marginVertical: 10, marginHorizontal: 20}}>
-              <ProgressBar
-                progress={progressCarbs}
-                color="#FFF"
-                style={{
-                  borderRadius: 10,
-                  backgroundColor: '#006A4E',
-                  height: 10,
-                }}
-              />
-            </View>
-          </View>
-          <View style={style.box}>
-            <View style={style.boxAlign}>
-              <Text style={style.text2}>Fats</Text>
-              <Text style={style.text3}>Remaining</Text>
-            </View>
-            <View style={style.boxAlign}>
-              <Text style={style.text2}>{currentFatsAmount} g</Text>
-              <Text style={style.text3}>{remainingFats} g</Text>
-            </View>
-            <View style={{marginVertical: 10, marginHorizontal: 20}}>
-              <ProgressBar
-                progress={progressFats}
-                color="#FFF"
-                style={{
-                  borderRadius: 10,
-                  backgroundColor: '#006A4E',
-                  height: 10,
-                }}
-              />
-            </View>
-          </View>
-          <View style={style.box}>
-            <View style={style.boxAlign}>
-              <Text style={style.text2}>Fibers</Text>
-              <Text style={style.text3}>Remaining</Text>
-            </View>
-            <View style={style.boxAlign}>
-              <Text style={style.text2}>{currentFibersAmount} g</Text>
-              <Text style={style.text3}>{remainingFibers} g</Text>
-            </View>
-            <View style={{marginVertical: 10, marginHorizontal: 20}}>
-              <ProgressBar
-                progress={progressFibers}
-                color="#FFF"
-                style={{
-                  borderRadius: 10,
-                  backgroundColor: '#006A4E',
-                  height: 10,
-                }}
-              />
-            </View>
-          </View>
-
           <View>
-            <TouchableOpacity style={style.removeGoalButton}>
-              <Text style={style.removeGoalButtonText}>Remove Goal</Text>
-            </TouchableOpacity>
+            <Text style={style.energyText}>Total Energy Target: 3000 kCal</Text>
+            <View style={style.box}>
+              <View style={style.boxAlign}>
+                <Text style={style.text2}>Proteins</Text>
+                <Text style={style.text3}>Remaining</Text>
+              </View>
+              <View style={style.boxAlign}>
+                <Text style={style.text2}>{currentProteinsAmount} g</Text>
+                <Text style={style.text3}>{remainingProteins} g</Text>
+              </View>
+              <View style={{marginVertical: 10, marginHorizontal: 20}}>
+                <ProgressBar
+                  progress={progressProteins}
+                  color="#FFF"
+                  style={{
+                    borderRadius: 10,
+                    backgroundColor: '#006A4E',
+                    height: 10,
+                  }}
+                />
+              </View>
+            </View>
+            <View style={style.box}>
+              <View style={style.boxAlign}>
+                <Text style={style.text2}>Carbs</Text>
+                <Text style={style.text3}>Remaining</Text>
+              </View>
+              <View style={style.boxAlign}>
+                <Text style={style.text2}>{currentCarbsAmount} g</Text>
+                <Text style={style.text3}>{remainingCarbs} g</Text>
+              </View>
+              <View style={{marginVertical: 10, marginHorizontal: 20}}>
+                <ProgressBar
+                  progress={progressCarbs}
+                  color="#FFF"
+                  style={{
+                    borderRadius: 10,
+                    backgroundColor: '#006A4E',
+                    height: 10,
+                  }}
+                />
+              </View>
+            </View>
+            <View style={style.box}>
+              <View style={style.boxAlign}>
+                <Text style={style.text2}>Fats</Text>
+                <Text style={style.text3}>Remaining</Text>
+              </View>
+              <View style={style.boxAlign}>
+                <Text style={style.text2}>{currentFatsAmount} g</Text>
+                <Text style={style.text3}>{remainingFats} g</Text>
+              </View>
+              <View style={{marginVertical: 10, marginHorizontal: 20}}>
+                <ProgressBar
+                  progress={progressFats}
+                  color="#FFF"
+                  style={{
+                    borderRadius: 10,
+                    backgroundColor: '#006A4E',
+                    height: 10,
+                  }}
+                />
+              </View>
+            </View>
+            <View style={style.box}>
+              <View style={style.boxAlign}>
+                <Text style={style.text2}>Fibers</Text>
+                <Text style={style.text3}>Remaining</Text>
+              </View>
+              <View style={style.boxAlign}>
+                <Text style={style.text2}>{currentFibersAmount} g</Text>
+                <Text style={style.text3}>{remainingFibers} g</Text>
+              </View>
+              <View style={{marginVertical: 10, marginHorizontal: 20}}>
+                <ProgressBar
+                  progress={progressFibers}
+                  color="#FFF"
+                  style={{
+                    borderRadius: 10,
+                    backgroundColor: '#006A4E',
+                    height: 10,
+                  }}
+                />
+              </View>
+            </View>
           </View>
+          <TouchableOpacity style={style.removeGoalButton}>
+            <Text style={style.removeGoalButtonText}>Remove Goal</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </>
@@ -198,9 +197,12 @@ const style = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     color: '#006A4E',
+    textAlign: 'center',
   },
   centeredContainer: {
     alignItems: 'center',
+    flexGrow: 1,
+    justifyContent: 'space-between',
   },
   text: {
     fontSize: 16,
@@ -218,9 +220,11 @@ const style = StyleSheet.create({
   profileContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 85,
+    width: '72.5%',
+    justifyContent: 'space-between',
     paddingTop: 10,
     paddingLeft: 15,
+    marginRight: 15,
   },
   profileName: {
     fontWeight: 'bold',
@@ -249,8 +253,8 @@ const style = StyleSheet.create({
 
   logoutButton: {
     backgroundColor: '#5CA08E',
-    padding: 10,
     paddingHorizontal: 35,
+    paddingVertical: 10,
     borderRadius: 20,
     alignItems: 'center',
     marginBottom: 60,
@@ -276,8 +280,8 @@ const style = StyleSheet.create({
   },
   box: {
     marginTop: 10,
+    paddingTop: 7,
     width: 337,
-    height: 69,
     flexShrink: 0,
     borderRadius: 10,
     backgroundColor: '#5CA08E',
@@ -293,8 +297,8 @@ const style = StyleSheet.create({
   },
   removeGoalButton: {
     marginTop: 15,
-    paddingHorizontal: 30,
-    paddingVertical: 7,
+    paddingHorizontal: 35,
+    paddingVertical: 10,
     backgroundColor: '#006A4E',
     alignItems: 'center',
     borderRadius: 20,

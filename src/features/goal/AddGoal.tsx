@@ -18,16 +18,17 @@ const AddGoal = () => {
         <Text style={style.title}>Choose goal</Text>
 
         <View style={style.box}>
-          <RadioButton
+          <RadioButton.Android
             value="loseWeight"
             status={selectedValue === 'loseWeight' ? 'checked' : 'unchecked'}
             onPress={() => setSelectedValue('loseWeight')}
             color="#2E856E"
+            uncheckedColor="black"
           />
           <Text style={style.boxText}>Lose weight</Text>
         </View>
         <View style={style.box}>
-          <RadioButton
+          <RadioButton.Android
             value="increaseMuscleMass"
             status={
               selectedValue === 'increaseMuscleMass' ? 'checked' : 'unchecked'
@@ -38,7 +39,7 @@ const AddGoal = () => {
           <Text style={style.boxText}>Increase muscle mass</Text>
         </View>
         <View style={style.box}>
-          <RadioButton
+          <RadioButton.Android
             value="gainWeight"
             status={selectedValue === 'gainWeight' ? 'checked' : 'unchecked'}
             onPress={() => setSelectedValue('gainWeight')}
