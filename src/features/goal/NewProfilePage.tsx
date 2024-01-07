@@ -3,12 +3,16 @@ import MyProfileIcon from '../../../assets/svg/MyProfileIcon';
 import {Center} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {ProgressBar} from 'react-native-paper';
+import {useState} from 'react';
+import {EditWeightModal} from './EditWeightModal';
 
 const NewProfilePage = () => {
   const navigation = useNavigation();
   const handleAddGoalPress = () => {
     navigation.navigate('AddGoal');
   };
+
+  const [weight, setWeight] = useState(NaN);
 
   const proteinsTarget = 177;
   const carbsTarget = 240;
@@ -52,8 +56,11 @@ const NewProfilePage = () => {
         </View>
 
         <View style={style.weightContainer}>
-          <Text style={style.weightText}>Weight: 55 kg</Text>
-          <Text style={style.editText}>edit</Text>
+          <Text style={style.weightText}>Weight: {weight} kg</Text>
+          <EditWeightModal
+            onEditWeight={newW => {
+              setWeight(newW);
+            }}></EditWeightModal>
         </View>
 
         <View style={style.centeredContainer}>
@@ -184,13 +191,6 @@ const style = StyleSheet.create({
     fontSize: 18,
     color: '#5CA08E',
     marginLeft: 5,
-  },
-  editText: {
-    color: '#5CA08E',
-    fontStyle: 'italic',
-    fontWeight: 'bold',
-    fontSize: 15,
-    marginRight: 5,
   },
   energyText: {
     marginTop: 30,
