@@ -1,7 +1,8 @@
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import MyProfileIcon from '../../../assets/svg/MyProfileIcon';
-import {Center} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
+import Keycloak from 'react-native-keycloak-plugin';
+import {TokensUtils} from 'react-native-keycloak-plugin';
 
 const MyProfileScreen = () => {
   const navigation = useNavigation();
@@ -39,7 +40,26 @@ const MyProfileScreen = () => {
           </TouchableOpacity>
         </View>
         <View>
-          <TouchableOpacity style={style.logoutButton}>
+          <TouchableOpacity
+            style={style.logoutButton}
+            onPress={() => {
+              const config = {
+                realm: 'mealmonitor',
+                'auth-server-url': 'https://keycloak.mealmonitor.galitianu.com',
+                'ssl-required': 'external',
+                resource: 'mealmonitor-app',
+                credentials: {
+                  secret: 'Aaw0AH4MVx8XsPFPWJjq4TJX6RwyccIH',
+                },
+              };
+              Keycloak.login(config, 'andrei@galitia.nu', '12345678')
+                .then(response => {
+                  console.log('Login Success');
+                })
+                .catch(error => {
+                  console.log('Login Failed' + error);
+                });
+            }}>
             <Text style={style.logoutButtonText}>Logout</Text>
           </TouchableOpacity>
         </View>
