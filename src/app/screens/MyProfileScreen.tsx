@@ -1,8 +1,21 @@
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import MyProfileIcon from '../../../assets/svg/MyProfileIcon';
 import {useNavigation} from '@react-navigation/native';
-import Keycloak from 'react-native-keycloak-plugin';
-import {TokensUtils} from 'react-native-keycloak-plugin';
+import Keycloak from '../../react-native-keycloak-plugin-3.0.3/src';
+
+export const config = {
+  realm: 'mealmonitor',
+  'auth-server-url': 'https://keycloak.mealmonitor.galitianu.com',
+  'ssl-required': 'external',
+  resource: 'mealmonitor-backend',
+  credentials: {
+    secret: 'MJVSbisw5bK4oSykVlvjREMqTy7aUtxq',
+  },
+  appsiteUri: ' ',
+  redirectUri: ' ',
+  'confidential-port': 0,
+  scope: 'profile email',
+};
 
 const MyProfileScreen = () => {
   const navigation = useNavigation();
@@ -42,22 +55,21 @@ const MyProfileScreen = () => {
         <View>
           <TouchableOpacity
             style={style.logoutButton}
-            onPress={() => {
-              const config = {
-                realm: 'mealmonitor',
-                'auth-server-url': 'https://keycloak.mealmonitor.galitianu.com',
-                'ssl-required': 'external',
-                resource: 'mealmonitor-app',
-                credentials: {
-                  secret: 'Aaw0AH4MVx8XsPFPWJjq4TJX6RwyccIH',
-                },
-              };
+            onPress={async () => {
               Keycloak.login(config, 'andrei@galitia.nu', '12345678')
                 .then(response => {
                   console.log('Login Success');
                 })
                 .catch(error => {
                   console.log('Login Failed' + error);
+                });
+
+              Keycloak.retrieveUserInfo()
+                .then(userInfo => {
+                  console.log(userInfo);
+                })
+                .catch(error => {
+                  console.log('2' + error);
                 });
             }}>
             <Text style={style.logoutButtonText}>Logout</Text>

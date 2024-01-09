@@ -1,0 +1,57 @@
+{
+  "name": "@charlyschulte/react-native-keycloak-plugin",
+  "version": "3.0.3",
+  "description": "Functional React Native module for authentication between a client and the keycloak server.",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  }, 
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charlyschulte/react-native-keycloak-plugin.git"
+  },
+  "keywords": [
+    "auth",
+    "login",
+    "keycloak",
+    "facebook",
+    "google",
+    "oauth",
+    "social",
+    "openid",
+    "token"
+  ],
+  "author": {
+    "name": "Charly Schulte"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/charlyschulte/react-native-keycloak-plugin/issues"
+  },
+  "homepage": "https://github.com/charlyschulte/react-native-keycloak-plugin#readme",
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.18.1",
+    "base-64": "^1.0.0",
+    "query-string": "^8.1.0",
+    "react-native": "^0.71.8",
+    "react-native-keychain": "^8.1.1",
+    "react-native-uuid":"2.0.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.0.3",
+    "eslint": "^8.40.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-native": "^4.0.0",
+    "typescript": "^5.0.4",
+    "@types/node": "^20.1.2"
+  },
+  "peerDependencies": {
+    "react-native-keychain": "^8.1.1"
+  }
+}
