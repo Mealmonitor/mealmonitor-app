@@ -2,6 +2,7 @@ import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import MyProfileIcon from '../../../assets/svg/MyProfileIcon';
 import {Center} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
+import {logout} from '../../features/auth/auth';
 
 const MyProfileScreen = () => {
   const navigation = useNavigation();
@@ -39,7 +40,11 @@ const MyProfileScreen = () => {
           </TouchableOpacity>
         </View>
         <View>
-          <TouchableOpacity style={style.logoutButton}>
+          <TouchableOpacity
+            style={style.logoutButton}
+            onPress={() => {
+              logout();
+            }}>
             <Text style={style.logoutButtonText}>Logout</Text>
           </TouchableOpacity>
         </View>
