@@ -1,7 +1,7 @@
 import React from 'react';
 import {withExpoSnack} from 'nativewind';
 
-import {StyleSheet} from 'react-native';
+import {KeyboardAvoidingView, Platform, StyleSheet} from 'react-native';
 
 import RequireSplashScreen from './src/features/splashScreen/RequireSplashScreen';
 import MainNavigation from './src/features/navigation/MainNavigation';
