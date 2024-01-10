@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   Text,
@@ -11,11 +11,19 @@ import {Picker} from '@react-native-picker/picker';
 import UnitOfMeasurementDropdown from '../addFood/UnitOfMeasurementDropdown';
 import MetabolismDropdown from './MetabolismDropdown';
 
+type AddMetabolismParams = {
+  selectedValue: string;
+};
+
 const AddMetabolism = () => {
   const navigation = useNavigation();
+  const route = useRoute<RouteProp<{params: AddMetabolismParams}, 'params'>>();
 
   const [selectedMetabolism, setSelectedMetabolism] = useState(null);
   const [weight, setWeight] = useState(NaN);
+  const [selectedValue, setSelectedValue] = useState(
+    route.params.selectedValue,
+  );
 
   const [formComplete, setFormComplete] = useState(false);
 
@@ -70,7 +78,10 @@ const AddMetabolism = () => {
             style={[style.nextButton, {opacity: formComplete ? 1 : 0.4}]}
             disabled={!formComplete}
             onPress={() => {
-              navigation.navigate('NewProfilePage');
+              navigation.navigate({
+                name: 'NewProfilePage',
+                params: {weight, selectedMetabolism, selectedValue},
+              });
             }}>
             <Text style={style.nextButtonText}>Finish</Text>
           </TouchableOpacity>

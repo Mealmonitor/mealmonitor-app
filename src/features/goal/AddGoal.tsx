@@ -60,7 +60,10 @@ const AddGoal = () => {
             style={[style.nextButton, {opacity: selectedValue ? 1 : 0.4}]}
             disabled={!selectedValue}
             onPress={() => {
-              navigation.navigate('AddMetabolism');
+              navigation.navigate({
+                name: 'AddMetabolism',
+                params: {selectedValue},
+              });
             }}>
             <Text style={style.nextButtonText}>Next</Text>
           </TouchableOpacity>
