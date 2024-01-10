@@ -10,7 +10,6 @@ import {
 import InputPasswordIcon from '../../../assets/svg/InputPasswordIcon';
 import InputTextIcon from '../../../assets/svg/InputTextIcon';
 import {Link, useNavigation} from '@react-navigation/native';
-import * as yup from 'yup';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {login} from '../../features/auth/auth';

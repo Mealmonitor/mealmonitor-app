@@ -12,6 +12,7 @@ import LoginComponent from '../../app/components/LoginComponent';
 import {getAuth, onAuthStateChanged} from 'firebase/auth';
 import {app} from '../../app/config/config';
 import LoginRegisterScreen from '../../app/screens/LoginRegisterScreen';
+import WelcomeScreen from '../../app/screens/WelcomeScreen';
 
 export type PublicStackParamList = {
   Login: undefined;
@@ -23,6 +24,7 @@ export type PublicStackParamList = {
   AddMetabolism: undefined;
   NewProfilePage: undefined;
   AddMeal: undefined;
+  WelcomeScreen: undefined;
 };
 const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
 
@@ -70,6 +72,7 @@ const MainNavigation = () => {
           </>
         ) : (
           <>
+            <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
             <Stack.Screen
               name="LoginRegister"
               component={LoginRegisterScreen}
