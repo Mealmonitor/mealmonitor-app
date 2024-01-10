@@ -13,6 +13,7 @@ import {app} from '../../app/config/config';
 import LoginRegisterScreen from '../../app/screens/LoginScreen';
 import LoginScreen from '../../app/screens/LoginScreen';
 import RegisterScreen from '../../app/screens/RegisterScreen';
+import WelcomeScreen from '../../app/screens/WelcomeScreen';
 
 export type PublicStackParamList = {
   Login: undefined;
@@ -24,6 +25,7 @@ export type PublicStackParamList = {
   AddMetabolism: undefined;
   NewProfilePage: undefined;
   AddMeal: undefined;
+  WelcomeScreen: undefined;
 };
 const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
 
@@ -71,6 +73,7 @@ const MainNavigation = () => {
           </>
         ) : (
           <>
+            <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
             <Stack.Screen
               name="LoginRegister"
               component={LoginRegisterScreen}
