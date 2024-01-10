@@ -8,10 +8,11 @@ import AddMetabolism from '../goal/AddMetabolism';
 import NewProfilePage from '../goal/NewProfilePage';
 
 import AddMealScreen from '../addMeal/AddMealScreen';
-import LoginComponent from '../../app/components/LoginComponent';
 import {getAuth, onAuthStateChanged} from 'firebase/auth';
 import {app} from '../../app/config/config';
-import LoginRegisterScreen from '../../app/screens/LoginRegisterScreen';
+import LoginRegisterScreen from '../../app/screens/LoginScreen';
+import LoginScreen from '../../app/screens/LoginScreen';
+import RegisterScreen from '../../app/screens/RegisterScreen';
 
 export type PublicStackParamList = {
   Login: undefined;
@@ -74,7 +75,8 @@ const MainNavigation = () => {
               name="LoginRegister"
               component={LoginRegisterScreen}
             />
-            <Stack.Screen name="Login" component={LoginComponent} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
           </>
         )}
       </Stack.Navigator>

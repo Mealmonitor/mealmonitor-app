@@ -1,4 +1,5 @@
 import {
+  createUserWithEmailAndPassword,
   sendEmailVerification,
   signInWithEmailAndPassword,
   signOut,
@@ -20,10 +21,20 @@ export const emailVerification = async () => {
   const user = auth.currentUser;
   await sendEmailVerification(auth.currentUser, {
     handleCodeInApp: true,
-    url: 'as',
+    url: 'https://galitianu.ro/',
   }).then(() => {
     console.log('cacat');
   });
+};
+
+export const signup = async (email, password) => {
+  const userCredential = await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password,
+  );
+  await emailVerification();
+  return userCredential.user;
 };
 
 export const logout = async () => {
