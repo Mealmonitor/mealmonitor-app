@@ -5,13 +5,12 @@ import {
   TextInput,
   Text,
   ScrollView,
-  KeyboardAvoidingView,
 } from 'react-native';
-import {Link, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import InputPasswordIcon from '../../../assets/svg/InputPasswordIcon';
 import InputTextIcon from '../../../assets/svg/InputTextIcon';
 import {useState} from 'react';
-import {login, signup} from '../../features/auth/auth';
+import {signup} from '../../features/auth/auth';
 
 const RegisterScreen = () => {
   const [firstName, setFirstName] = useState('');
@@ -25,7 +24,7 @@ const RegisterScreen = () => {
   const navigation = useNavigation();
 
   const handleRegister = async () => {
-    const user = await signup(email, password);
+    const user = await signup(email, password, firstName + ' ' + lastName);
     if (user) {
     }
   };

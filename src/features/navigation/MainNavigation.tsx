@@ -10,7 +10,6 @@ import NewProfilePage from '../goal/NewProfilePage';
 import AddMealScreen from '../addMeal/AddMealScreen';
 import {getAuth, onAuthStateChanged} from 'firebase/auth';
 import {app} from '../../app/config/config';
-import LoginRegisterScreen from '../../app/screens/LoginScreen';
 import LoginScreen from '../../app/screens/LoginScreen';
 import RegisterScreen from '../../app/screens/RegisterScreen';
 import WelcomeScreen from '../../app/screens/WelcomeScreen';
@@ -74,10 +73,6 @@ const MainNavigation = () => {
         ) : (
           <>
             <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
-            <Stack.Screen
-              name="LoginRegister"
-              component={LoginRegisterScreen}
-            />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
           </>
