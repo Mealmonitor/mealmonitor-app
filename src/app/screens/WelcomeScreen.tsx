@@ -10,10 +10,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import SplashScreenLogo from '../../../assets/svg/SplashScreenLogo';
+import {useNavigation} from '@react-navigation/native';
 
 const image = require('../../../assets/splash.png');
 
 const WelcomeScreen = () => {
+  const navigation = useNavigation();
   return (
     <>
       <View style={style.fullScreen}>
@@ -30,12 +32,12 @@ const WelcomeScreen = () => {
           <View style={style.buttonContainer}>
             <TouchableOpacity
               style={style.button}
-              onPress={() => console.log('Login Pressed')}>
+              onPress={() => navigation.navigate('Login')}>
               <Text style={style.buttonText}>Login</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={style.button}
-              onPress={() => console.log('Register Pressed')}>
+              onPress={() => navigation.navigate('Register')}>
               <Text style={style.buttonText}>Register</Text>
             </TouchableOpacity>
           </View>
