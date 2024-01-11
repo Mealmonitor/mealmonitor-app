@@ -107,3 +107,20 @@ export async function searchProduct(query: string) {
     throw error; // re-throw the error so that it can be caught and handled in the component
   }
 }
+
+export async function getUserFirstName() {
+  const config = {
+    headers: {Authorization: `Bearer ${await auth.currentUser.getIdToken()}`},
+  };
+  try {
+    const response = await axios.get(
+      baseURL + '/users/' + auth.currentUser.uid + '/name',
+      config,
+    );
+    console.log(response.data);
+    return response.data as string;
+  } catch (error) {
+    console.error(error);
+    throw error; // re-throw the error so that it can be caught and handled in the component
+  }
+}

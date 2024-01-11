@@ -3,13 +3,23 @@ import MyProfileIcon from '../../../assets/svg/MyProfileIcon';
 import {Center} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {logout} from '../../features/auth/auth';
+import {getUserFirstName} from '../api/publicApi';
+import {useEffect, useState} from 'react';
 
 const MyProfileScreen = () => {
   const navigation = useNavigation();
   const handleAddGoalPress = () => {
     navigation.navigate('AddGoal');
   };
-
+  const [name, setName] = useState<string>('');
+  useEffect(() => {
+    const fun = async () => {
+      const namew = await getUserFirstName();
+      setName(namew);
+    };
+    fun();
+  }),
+    [];
   return (
     <>
       <View className="pt-12">
@@ -23,13 +33,13 @@ const MyProfileScreen = () => {
           </View>
 
           <View style={style.profileContainer}>
-            <Text style={style.profileName}>Andreea</Text>
+            <Text style={style.profileName}>{name}</Text>
           </View>
         </View>
 
         <View style={style.centeredContainer}>
           <Text style={style.text}>
-            Hi Andreea,{'\n\n'}You have not currently set a goal. Choose one and
+            Hi {name + ',\n\n'}You have not currently set a goal. Choose one and
             give us some information about you to begin your health improvement
             journey!
           </Text>
