@@ -8,13 +8,19 @@ import {
 import {Link, useNavigation} from '@react-navigation/native';
 import InputPasswordIcon from '../../../assets/svg/InputPasswordIcon';
 import InputTextIcon from '../../../assets/svg/InputTextIcon';
-import {useState} from 'react';
+import {useContext, useState} from 'react';
 import {login} from '../../features/auth/auth';
+import {UserContext} from '../../features/auth/userContext';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const {updateState} = useContext(UserContext);
+  const setEmailAsVerified = () => {
+    updateState({
+      isEmailVerified: true,
+    });
+  };
   const [isPasswordSecure, setIsPasswordSecure] = useState(true);
 
   const navigation = useNavigation();
@@ -22,6 +28,7 @@ const LoginScreen = () => {
   const handleLogin = async () => {
     const user = await login(email, password);
     if (user) {
+      setEmailAsVerified();
     }
   };
   return (
