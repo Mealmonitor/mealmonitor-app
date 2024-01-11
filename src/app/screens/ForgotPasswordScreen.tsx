@@ -5,15 +5,16 @@ import {
   TextInput,
   Text,
   ScrollView,
+  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import InputPasswordIcon from '../../../assets/svg/InputPasswordIcon';
 import InputTextIcon from '../../../assets/svg/InputTextIcon';
 import {useContext, useState} from 'react';
-import {signup} from '../../features/auth/auth';
+import {resetPassword, signup} from '../../features/auth/auth';
 import {UserContext} from '../../features/auth/userContext';
 
-const RegisterScreen = () => {
+const ForgotPasswordScreen = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
 
@@ -24,9 +25,19 @@ const RegisterScreen = () => {
 
   const navigation = useNavigation();
 
-  const handleRegister = async () => {
-    const user = await signup(email, password, firstName, lastName);
-    navigation.navigate('CheckEmailScreen');
+  const handleReset = async () => {
+    resetPassword(email);
+    Alert.alert(
+      `Password reset link has been sent to your E-Mail Address`,
+      '',
+      [
+        {
+          text: 'OK',
+          style: 'cancel',
+        },
+      ],
+    );
+    navigation.navigate('Login');
   };
 
   const {isEmailVerified, updateState} = useContext(UserContext);
@@ -42,32 +53,12 @@ const RegisterScreen = () => {
       <View style={style.modalLikeContainer}>
         <View style={style.container}>
           <View style={style.titleTextBox}>
-            <Text style={style.titleText}>Register</Text>
+            <Text style={style.titleText}>Request a new Password</Text>
           </View>
           <ScrollView
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={style.container2}>
-            <View style={style.fieldContainer}>
-              <Text style={style.inputHelpText}>First Name</Text>
-              <View style={style.input}>
-                <TextInput
-                  textContentType="givenName"
-                  style={style.textBox}
-                  onChangeText={newText => setFirstName(newText)}
-                />
-              </View>
-            </View>
-            <View style={style.fieldContainer}>
-              <Text style={style.inputHelpText}>Last Name</Text>
-              <View style={style.input}>
-                <TextInput
-                  textContentType="familyName"
-                  style={style.textBox}
-                  onChangeText={newText => setLastName(newText)}
-                />
-              </View>
-            </View>
             <View style={style.fieldContainer}>
               <Text style={style.inputHelpText}>E-Mail Address</Text>
               <View style={style.input}>
@@ -80,35 +71,10 @@ const RegisterScreen = () => {
               </View>
             </View>
 
-            <View style={style.fieldContainer}>
-              <Text style={style.inputHelpText}>Password</Text>
-              <View style={style.input}>
-                <TextInput
-                  textContentType="password"
-                  style={style.textBox}
-                  secureTextEntry={isPasswordSecure}
-                  onChangeText={newText => setPassword(newText)}
-                />
-                <TouchableOpacity
-                  hitSlop={15}
-                  onPress={() => {
-                    isPasswordSecure
-                      ? setIsPasswordSecure(false)
-                      : setIsPasswordSecure(true);
-                  }}>
-                  {!isPasswordSecure ? (
-                    <InputPasswordIcon size={28} color={'black'} />
-                  ) : (
-                    <InputTextIcon size={28} color={'black'}></InputTextIcon>
-                  )}
-                </TouchableOpacity>
-              </View>
-            </View>
-
             <View style={style.filler}></View>
 
-            <TouchableOpacity style={style.button} onPress={handleRegister}>
-              <Text style={style.buttonText}>Next</Text>
+            <TouchableOpacity style={style.button} onPress={handleReset}>
+              <Text style={style.buttonText}>Continue</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>
@@ -230,4 +196,4 @@ export const style = StyleSheet.create({
   },
 });
 
-export default RegisterScreen;
+export default ForgotPasswordScreen;

@@ -9,14 +9,17 @@ import {NavigationContainer} from '@react-navigation/native';
 import {navigationTheme} from './src/theme/navigation-theme';
 import {Provider} from 'react-redux';
 import {store} from './src/app/store/store';
+import {UserContextProvider} from './src/features/auth/userContext';
 
 function App(): JSX.Element {
   return (
     <Provider store={store}>
       <RequireSplashScreen>
-        <NavigationContainer theme={navigationTheme}>
-          <MainNavigation />
-        </NavigationContainer>
+        <UserContextProvider>
+          <NavigationContainer theme={navigationTheme}>
+            <MainNavigation />
+          </NavigationContainer>
+        </UserContextProvider>
       </RequireSplashScreen>
     </Provider>
   );

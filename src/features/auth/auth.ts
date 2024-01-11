@@ -2,6 +2,7 @@ import {
   User,
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
   updateCurrentUser,
@@ -9,6 +10,7 @@ import {
 } from 'firebase/auth';
 import {auth} from '../../app/config/config';
 import {backendSignup} from '../../app/api/publicApi';
+import {useState} from 'react';
 
 export const login = async (email, password) => {
   const userCredential = await signInWithEmailAndPassword(
@@ -27,7 +29,6 @@ export const emailVerification = async () => {
     url: 'https://google.com/',
   });
 };
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export const signup = async (email, password, firstName, lastName) => {
   const userCredential = await createUserWithEmailAndPassword(
@@ -39,18 +40,26 @@ export const signup = async (email, password, firstName, lastName) => {
     displayName: firstName + ' ' + lastName,
   });
 
-  await emailVerification();
-  await backendSignup({
+  emailVerification();
+  backendSignup({
     email: email,
     firstName: firstName,
     lastName: lastName,
     firebaseId: auth.currentUser.uid,
   });
-  await delay(3000);
 
   return userCredential.user;
 };
 
+export const emailVerified = async () => {
+  await auth.currentUser?.reload();
+  return auth.currentUser?.emailVerified;
+};
+
 export const logout = async () => {
   await signOut(auth);
+};
+
+export const resetPassword = async (email: string) => {
+  await sendPasswordResetEmail(auth, email);
 };

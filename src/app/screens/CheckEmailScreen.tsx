@@ -1,27 +1,39 @@
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  Text,
-} from 'react-native';
-import {Link, useNavigation} from '@react-navigation/native';
-import InputPasswordIcon from '../../../assets/svg/InputPasswordIcon';
-import InputTextIcon from '../../../assets/svg/InputTextIcon';
-import {useState} from 'react';
-import {login} from '../../features/auth/auth';
+import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {useContext, useState} from 'react';
+import {emailVerification, emailVerified} from '../../features/auth/auth';
+import {UserContext} from '../../features/auth/userContext';
 
-const LoginScreen = () => {
+const CheckEmailScreen = () => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const [isPasswordSecure, setIsPasswordSecure] = useState(true);
-
+  const [resendEnabled, setResendEnabled] = useState(true);
+  const {updateState} = useContext(UserContext);
   const navigation = useNavigation();
-
-  const handleLogin = async () => {
-    const user = await login(email, password);
-    if (user) {
+  const setEmailAsVerified = () => {
+    updateState({
+      isEmailVerified: true,
+    });
+  };
+  const handleResend = () => {
+    emailVerification();
+    setResendEnabled(false);
+  };
+  const handleConfirmation = async () => {
+    const rez = await emailVerified();
+    if (!rez) {
+      Alert.alert(`E-Mail is not yet verified.`, '', [
+        {
+          text: 'OK',
+          style: 'cancel',
+        },
+      ]);
+    } else {
+      setEmailAsVerified();
     }
   };
   return (
@@ -34,58 +46,26 @@ const LoginScreen = () => {
 
       <View style={style.modalLikeContainer}>
         <View style={style.container}>
-          <View style={style.titleTextBox}>
-            <Text style={style.titleText}>Login</Text>
-          </View>
-          <View style={style.fieldContainer}>
-            <Text style={style.inputHelpText}>E-Mail Address</Text>
-            <View style={style.input}>
-              <TextInput
-                textContentType="emailAddress"
-                autoCapitalize="none"
-                style={style.textBox}
-                onChangeText={newText => setEmail(newText)}
-              />
-            </View>
-          </View>
-
-          <View style={style.fieldContainer}>
-            <Text style={style.inputHelpText}>Password</Text>
-            <View style={style.input}>
-              <TextInput
-                textContentType="password"
-                style={style.textBox}
-                secureTextEntry={isPasswordSecure}
-                onChangeText={newText => setPassword(newText)}
-              />
-              <TouchableOpacity
-                hitSlop={15}
-                onPress={() => {
-                  isPasswordSecure
-                    ? setIsPasswordSecure(false)
-                    : setIsPasswordSecure(true);
-                }}>
-                {!isPasswordSecure ? (
-                  <InputPasswordIcon size={28} color={'black'} />
-                ) : (
-                  <InputTextIcon size={28} color={'black'}></InputTextIcon>
-                )}
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <Link to={{screen: 'ForgotPasswordScreen'}} style={style.link}>
-            Forgot Password?
-          </Link>
-
-          <Link to={{screen: 'Register'}} style={style.link}>
-            Have no MealMonitor account? Go to Registration
-          </Link>
-
           <View style={style.filler}></View>
 
-          <TouchableOpacity style={style.button} onPress={handleLogin}>
-            <Text style={style.buttonText}>Login</Text>
+          <View style={style.titleTextBox}>
+            <Text style={style.titleText}>Confirm E-Mail Address</Text>
+          </View>
+          <View style={style.titleTextBox}>
+            <Text style={style.paragraphText}>
+              We have sent an E-Mail to email. Please check yout inbox and, if
+              necessary, your sppam folder.
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={style.button2}
+            onPress={handleResend}
+            disabled={!resendEnabled}>
+            <Text style={style.resendButton}>Resend E-Mail</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={style.button} onPress={handleConfirmation}>
+            <Text style={style.buttonText}>Next</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -138,10 +118,16 @@ export const style = StyleSheet.create({
     flexGrow: 1,
     display: 'flex',
     paddingHorizontal: 24,
-    paddingBottom: 48,
     paddingTop: 20,
     flexDirection: 'column',
     gap: 16,
+  },
+  container2: {
+    flexGrow: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 16,
+    paddingBottom: 40,
   },
   input: {
     flexDirection: 'row',
@@ -167,9 +153,20 @@ export const style = StyleSheet.create({
     lineHeight: 24,
   },
   titleText: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    color: '#2E856E',
+    fontSize: 24,
+    fontFamily: 'Basic',
+    fontWeight: '400',
     lineHeight: 32,
+    wordWrap: 'break-word',
+  },
+  paragraphText: {
+    color: 'black',
+    fontSize: 16,
+    fontFamily: 'Basic',
+    fontWeight: '400',
+    lineHeight: 24,
+    wordWrap: 'break-word',
   },
   titleTextBox: {
     alignItems: 'center',
@@ -198,6 +195,21 @@ export const style = StyleSheet.create({
     lineHeight: 24,
     color: 'white',
   },
+  button2: {
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    height: 44,
+  },
+  resendButton: {
+    color: '#2E856E',
+    fontSize: 16,
+    fontFamily: 'Basic',
+    fontWeight: '400',
+    textDecoration: 'underline',
+    lineHeight: 24,
+    wordWrap: 'break-word',
+  },
 });
 
-export default LoginScreen;
+export default CheckEmailScreen;

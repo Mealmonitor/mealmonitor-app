@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {KeyboardAvoidingView, Platform} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import PublicTabs from './components/PublicTabs';
@@ -13,6 +13,9 @@ import {app} from '../../app/config/config';
 import LoginScreen from '../../app/screens/LoginScreen';
 import RegisterScreen from '../../app/screens/RegisterScreen';
 import WelcomeScreen from '../../app/screens/WelcomeScreen';
+import CheckEmailScreen from '../../app/screens/CheckEmailScreen';
+import {UserContext} from '../auth/userContext';
+import ForgotPasswordScreen from '../../app/screens/ForgotPasswordScreen';
 
 export type PublicStackParamList = {
   Login: undefined;
@@ -25,6 +28,8 @@ export type PublicStackParamList = {
   NewProfilePage: undefined;
   AddMeal: undefined;
   WelcomeScreen: undefined;
+  CheckEmailScreen: undefined;
+  ForgotPasswordScreen: undefined;
 };
 const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
 
@@ -46,6 +51,9 @@ const MainNavigation = () => {
 
     return unsubscribe;
   }, []);
+
+  const {isEmailVerified, updateState} = useContext(UserContext);
+
   return (
     <KeyboardAvoidingView
       keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}
@@ -61,7 +69,7 @@ const MainNavigation = () => {
             fontSize: 20,
           },
         }}>
-        {user ? (
+        {user && isEmailVerified ? (
           <>
             <Stack.Screen name="AddMeal" component={AddMealScreen} />
             <Stack.Screen name="Public" component={PublicTabs} />
@@ -75,6 +83,14 @@ const MainNavigation = () => {
             <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen
+              name="CheckEmailScreen"
+              component={CheckEmailScreen}
+            />
+            <Stack.Screen
+              name="ForgotPasswordScreen"
+              component={ForgotPasswordScreen}
+            />
           </>
         )}
       </Stack.Navigator>
