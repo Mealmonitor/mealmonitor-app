@@ -8,6 +8,7 @@ import {
   updateProfile,
 } from 'firebase/auth';
 import {auth} from '../../app/config/config';
+import {backendSignup} from '../../app/api/publicApi';
 
 export const login = async (email, password) => {
   const userCredential = await signInWithEmailAndPassword(
@@ -26,16 +27,27 @@ export const emailVerification = async () => {
     url: 'https://google.com/',
   });
 };
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-export const signup = async (email, password, displayName) => {
+export const signup = async (email, password, firstName, lastName) => {
   const userCredential = await createUserWithEmailAndPassword(
     auth,
     email,
     password,
   );
-  await updateProfile(userCredential.user, {displayName: displayName});
+  await updateProfile(userCredential.user, {
+    displayName: firstName + ' ' + lastName,
+  });
 
   await emailVerification();
+  await backendSignup({
+    email: email,
+    firstName: firstName,
+    lastName: lastName,
+    firebaseId: auth.currentUser.uid,
+  });
+  await delay(3000);
+
   return userCredential.user;
 };
 

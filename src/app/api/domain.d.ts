@@ -33,3 +33,10 @@ export interface ProductDto {
   carbsPerCent: number;
   fatsPerCent: number;
 }
+
+export interface NewUserDto {
+  firstName: string;
+  lastName: string;
+  email: string;
+  firebaseId: string;
+}

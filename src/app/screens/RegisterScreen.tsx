@@ -24,7 +24,7 @@ const RegisterScreen = () => {
   const navigation = useNavigation();
 
   const handleRegister = async () => {
-    const user = await signup(email, password, firstName + ' ' + lastName);
+    const user = await signup(email, password, firstName, lastName);
     if (user) {
     }
   };
