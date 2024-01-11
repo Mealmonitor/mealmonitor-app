@@ -2,6 +2,7 @@ import axios from 'axios';
 import {Meal, NewUserDto, ProductDto} from './domain';
 import {auth} from '../config/config';
 
+
 const baseURL = 'http://192.168.100.12:8088';
 
 export const parseDate = (date: Date) => {

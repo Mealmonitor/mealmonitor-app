@@ -1,38 +1,148 @@
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import MyProfileIcon from '../../../assets/svg/MyProfileIcon';
 import {Center} from 'native-base';
-import {useNavigation} from '@react-navigation/native';
+import {
+  RouteProp,
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {ProgressBar} from 'react-native-paper';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {EditWeightModal} from './EditWeightModal';
+import {Meal} from '../../app/api/domain';
+import {getMeals} from '../../app/api/publicApi';
+
+type NewProfilePageParams = {
+  weight: number;
+  selectedMetabolism: string;
+  selectedValue: string;
+};
 
 const NewProfilePage = () => {
   const navigation = useNavigation();
-  const handleAddGoalPress = () => {
-    navigation.navigate('AddGoal');
+  const [mealList, setMealList] = useState<Meal[]>([]);
+
+  const [date, setDate] = useState(new Date());
+  const [error, setError] = useState(null);
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    async function fetchMeals(date) {
+      try {
+        const fetchedMeals: Meal[] = await getMeals(date);
+        setMealList(fetchedMeals);
+      } catch (err) {
+        setError(err);
+      }
+    }
+
+    if (isFocused) {
+      fetchMeals(date);
+    }
+  }, [date, isFocused]);
+  console.log('Meal List:', mealList);
+
+  const route = useRoute<RouteProp<{params: NewProfilePageParams}, 'params'>>();
+
+  const [weight, setWeight] = useState(0);
+  const [selectedMetabolism, setSelectedMetabolism] = useState('');
+  const [selectedGoal, setSelectedGoal] = useState('');
+
+  const [tableValue, setTableValue] = useState(0);
+
+  const [proteinsTarget, setProteinsTarget] = useState(0);
+  const [carbsTarget, setCarbsTarget] = useState(0);
+  const [fatsTarget, setFatsTarget] = useState(0);
+  //const [fibersTarget, setFibersTarget] = useState(25);
+
+  const [currentProteinsAmount, setCurrentProteinsAmount] = useState(0);
+  const [currentCarbsAmount, setCurrentCarbsAmount] = useState(0);
+  const [currentFatsAmount, setCurrentFatsAmount] = useState(0);
+  //const [currentFibersAmount, setCurrentFibersAmount] = useState(NaN);
+
+  const [totalEnergy, setTotalEnergy] = useState(0);
+
+  const [remainingProteins, setRemainingProteins] = useState(0);
+  const [remainingCarbs, setRemainingCarbs] = useState(0);
+  const [remainingFats, setRemainingFats] = useState(0);
+  //const [remainingFibers, setRemainingFibers] = useState(NaN);
+
+  const [progressProteins, setProgressProteins] = useState(0);
+  const [progressCarbs, setProgressCarbs] = useState(0);
+  const [progressFats, setProgressFats] = useState(0);
+  //const [progressFibers, setProgressFibers] = useState(NaN);
+
+  const getPerDay = (meals: Meal[], nutriVal: string) => {
+    return (
+      (mealList
+        .map(meal => {
+          return meal.foodList
+            ? meal.foodList.reduce((sum, current) => sum + current[nutriVal], 0)
+            : 0;
+        })
+        .reduce((a, b) => a + b, 0) *
+        100) /
+      mealList
+        .map(meal => {
+          return meal.foodList
+            ? meal.foodList.reduce(
+                (sum, current) =>
+                  sum + current.proteins + current.carbs + current.fats,
+                0,
+              )
+            : 0;
+        })
+        .reduce((a, b) => a + b, 0)
+    );
   };
 
-  const [weight, setWeight] = useState(NaN);
+  useEffect(() => {
+    setWeight(route.params.weight);
+    setSelectedMetabolism(route.params.selectedMetabolism);
+    setSelectedGoal(route.params.selectedValue);
 
-  const proteinsTarget = 177;
-  const carbsTarget = 240;
-  const fatsTarget = 240;
-  const fibersTarget = 25;
+    if (selectedGoal === 'loseWeight') {
+      if (selectedMetabolism === 'Slow') setTableValue(22);
+      if (selectedMetabolism === 'Moderate') setTableValue(24);
+      if (selectedMetabolism === 'Fast') setTableValue(26);
+    }
+    if (selectedGoal === 'increaseMuscleMass') {
+      if (selectedMetabolism === 'Slow') setTableValue(29);
+      if (selectedMetabolism === 'Moderate') setTableValue(31);
+      if (selectedMetabolism === 'Fast') setTableValue(33);
+    }
+    if (selectedGoal === 'gainWeight') {
+      if (selectedMetabolism === 'Slow') setTableValue(35);
+      if (selectedMetabolism === 'Moderate') setTableValue(43);
+      if (selectedMetabolism === 'Fast') setTableValue(70);
+    }
 
-  const currentProteinsAmount = 23;
-  const currentCarbsAmount = 120;
-  const currentFatsAmount = 74;
-  const currentFibersAmount = 23;
+    setTotalEnergy(weight * tableValue);
 
-  const remainingProteins = proteinsTarget - currentProteinsAmount;
-  const remainingCarbs = carbsTarget - currentCarbsAmount;
-  const remainingFats = fatsTarget - currentFatsAmount;
-  const remainingFibers = fibersTarget - currentFibersAmount;
+    setProteinsTarget(weight * 2);
+    setFatsTarget(weight * 1);
+    setCarbsTarget((totalEnergy - proteinsTarget * 4 - carbsTarget * 9) / 4);
+  }, [weight, selectedMetabolism, selectedGoal]);
 
-  const progressProteins = currentProteinsAmount / proteinsTarget;
-  const progressCarbs = currentCarbsAmount / carbsTarget;
-  const progressFats = currentFatsAmount / fatsTarget;
-  const progressFibers = currentFibersAmount / fibersTarget;
+  useEffect(() => {
+    setCurrentProteinsAmount(
+      parseFloat(getPerDay(mealList, 'proteins').toFixed(2)),
+    );
+    setCurrentCarbsAmount(parseFloat(getPerDay(mealList, 'carbs').toFixed(2)));
+    setCurrentFatsAmount(parseFloat(getPerDay(mealList, 'fats').toFixed(2)));
+    //setCurrentFibersAmount(parseFloat(getPerDay(mealList, 'fibers').toFixed(2)));
+
+    setRemainingProteins(proteinsTarget - currentProteinsAmount);
+    setRemainingCarbs(carbsTarget - currentCarbsAmount);
+    setRemainingFats(fatsTarget - currentFatsAmount);
+    //setRemainingFibers(fibersTarget - currentFibersAmount);
+
+    setProgressProteins(currentProteinsAmount / proteinsTarget);
+    setProgressCarbs(currentCarbsAmount / carbsTarget);
+    setProgressFats(currentFatsAmount / fatsTarget);
+    //setProgressFibers(currentFibersAmount / fibersTarget);
+  }, [mealList.length, proteinsTarget, carbsTarget, fatsTarget]);
 
   return (
     <>
@@ -65,7 +175,9 @@ const NewProfilePage = () => {
 
         <View style={style.centeredContainer}>
           <View>
-            <Text style={style.energyText}>Total Energy Target: 3000 kCal</Text>
+            <Text style={style.energyText}>
+              Total Energy Target: {totalEnergy} kCal
+            </Text>
             <View style={style.box}>
               <View style={style.boxAlign}>
                 <Text style={style.text2}>Proteins</Text>
@@ -129,7 +241,7 @@ const NewProfilePage = () => {
                 />
               </View>
             </View>
-            <View style={style.box}>
+            {/* <View style={style.box}>
               <View style={style.boxAlign}>
                 <Text style={style.text2}>Fibers</Text>
                 <Text style={style.text3}>Remaining</Text>
@@ -149,7 +261,7 @@ const NewProfilePage = () => {
                   }}
                 />
               </View>
-            </View>
+            </View> */}
           </View>
           <TouchableOpacity style={style.removeGoalButton}>
             <Text style={style.removeGoalButtonText}>Remove Goal</Text>

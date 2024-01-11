@@ -185,7 +185,6 @@ const DashboardScreen = ({mealToAdd}) => {
           </Text>
           {true && <Text style={style.chartSubText}>{'\n\n\n'}3342 left</Text>}
         </View>
-
         <View className="pb-8 pt-6">
           <LegendItem
             color={sliceColor[0]}
@@ -200,13 +199,11 @@ const DashboardScreen = ({mealToAdd}) => {
             text={`${totalFatsForToday}% Fats`}
           />
         </View>
-
         <View style={style.headerRow}>
           <Text style={style.headerText}>Meal No.</Text>
           <Text style={[style.headerTextMiddle, style.headerText]}>Time</Text>
           <Text style={style.headerText}>Energy</Text>
         </View>
-
         <ScrollView
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
