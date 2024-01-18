@@ -3,7 +3,7 @@ import {Goal, Meal, NewUserDto, ProductDto} from './domain';
 import {auth} from '../config/config';
 import {G} from 'react-native-svg';
 
-const baseURL = 'http://192.168.100.12:8088';
+const baseURL = 'https://api.mealmonitor.galitianu.com';
 
 export const parseDate = (date: Date) => {
   return (

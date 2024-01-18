@@ -123,26 +123,28 @@ const AddMealScreen: React.FC<QRCodeModal> = () => {
             </View>
 
             {query.length >= 3 && (
-              <View style={style.searchResults}>
-                {resultList.map((result: ProductDto, index) => {
-                  return (
-                    <TouchableOpacity
-                      onPress={() => {
-                        setProduct(result);
-                        setShowEditModal(true);
-                      }}>
-                      <Text style={style.resultTitle}>
-                        {result.name + ' by ' + result.brand}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
-                <View>
-                  <Text style={style.resultNotFound}>
-                    My Food is not on the list
-                  </Text>
+              <ScrollView>
+                <View style={style.searchResults}>
+                  {resultList.map((result: ProductDto, index) => {
+                    return (
+                      <TouchableOpacity
+                        onPress={() => {
+                          setProduct(result);
+                          setShowEditModal(true);
+                        }}>
+                        <Text style={style.resultTitle}>
+                          {result.name + ' by ' + result.brand}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                  <View>
+                    <Text style={style.resultNotFound}>
+                      My Food is not on the list
+                    </Text>
+                  </View>
                 </View>
-              </View>
+              </ScrollView>
             )}
             <Modal
               animationType="fade"
