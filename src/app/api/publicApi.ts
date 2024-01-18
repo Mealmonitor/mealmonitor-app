@@ -1,7 +1,7 @@
 import axios from 'axios';
-import {Meal, NewUserDto, ProductDto} from './domain';
+import {Goal, Meal, NewUserDto, ProductDto} from './domain';
 import {auth} from '../config/config';
-
+import {G} from 'react-native-svg';
 
 const baseURL = 'http://192.168.100.12:8088';
 
@@ -120,6 +120,39 @@ export async function getUserFirstName() {
     );
     console.log(response.data);
     return response.data as string;
+  } catch (error) {
+    console.error(error);
+    throw error; // re-throw the error so that it can be caught and handled in the component
+  }
+}
+
+export async function updateGoal(goal: Goal) {
+  const config = {
+    headers: {Authorization: `Bearer ${await auth.currentUser.getIdToken()}`},
+  };
+  try {
+    const response = await axios.post(
+      baseURL + '/users/' + auth.currentUser.uid + '/goal',
+      goal,
+      config,
+    );
+  } catch (error) {
+    console.error(error);
+    throw error; // re-throw the error so that it can be caught and handled in the component
+  }
+}
+
+export async function getGoal() {
+  const config = {
+    headers: {Authorization: `Bearer ${await auth.currentUser.getIdToken()}`},
+  };
+  try {
+    const response = await axios.get(
+      baseURL + '/users/' + auth.currentUser.uid + '/goal',
+      config,
+    );
+    console.log(response.data);
+    return response.data as Goal;
   } catch (error) {
     console.error(error);
     throw error; // re-throw the error so that it can be caught and handled in the component

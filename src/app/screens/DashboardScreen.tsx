@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {ScrollView, Text, View, StyleSheet} from 'react-native';
 import {deleteMeal, getMeals, parseDate} from '../api/publicApi';
 import {Meal} from '../api/domain';
@@ -9,6 +9,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import MealDetailsModal from '../../features/mealDetails/MealDetailsModal';
 import DatePicker from 'react-native-date-picker';
 import {useIsFocused} from '@react-navigation/native';
+import {UserContext} from '../../features/auth/userContext';
 
 const subtractDaysFromDate = (currentDate, daysToSubtract) => {
   daysToSubtract = daysToSubtract || 0;
@@ -19,18 +20,21 @@ const subtractDaysFromDate = (currentDate, daysToSubtract) => {
 };
 
 const DashboardScreen = ({mealToAdd}) => {
-  const [mealList, setMealList] = useState<Meal[]>([]);
+  //const [mealList, setMealList] = useState<Meal[]>([]);
   const [error, setError] = useState(null);
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
 
   const isFocused = useIsFocused();
 
+  const {updateState, meals} = useContext(UserContext);
+
   useEffect(() => {
     async function fetchMeals(date) {
       try {
         const fetchedMeals: Meal[] = await getMeals(date);
-        setMealList(fetchedMeals);
+        //setMealList(fetchedMeals);
+        updateState({meals: fetchedMeals});
       } catch (err) {
         setError(err);
       }
@@ -44,7 +48,7 @@ const DashboardScreen = ({mealToAdd}) => {
   const handleMealDeletion = async (meal: Meal) => {
     try {
       await deleteMeal(meal); // Assumes deleteMeal is an async function that calls your API
-      setMealList(mealList.filter(lmeal => lmeal.id !== meal.id));
+      updateState({meals: meals.filter(lmeal => lmeal.id !== meal.id)});
     } catch (error) {
       console.error('Error deleting meal:', error);
       // Handle any errors here
@@ -53,7 +57,7 @@ const DashboardScreen = ({mealToAdd}) => {
 
   const getPerDay = (meals: Meal[], nutriVal: string) => {
     return (
-      (mealList
+      (meals
         .map(meal => {
           return meal.foodList
             ? meal.foodList.reduce((sum, current) => sum + current[nutriVal], 0)
@@ -61,7 +65,7 @@ const DashboardScreen = ({mealToAdd}) => {
         })
         .reduce((a, b) => a + b, 0) *
         100) /
-      mealList
+      meals
         .map(meal => {
           return meal.foodList
             ? meal.foodList.reduce(
@@ -76,12 +80,10 @@ const DashboardScreen = ({mealToAdd}) => {
   };
 
   const totalProteinsForToday = parseFloat(
-    getPerDay(mealList, 'proteins').toFixed(2),
+    getPerDay(meals, 'proteins').toFixed(2),
   );
-  const totalCarbsForToday = parseFloat(
-    getPerDay(mealList, 'carbs').toFixed(2),
-  );
-  const totalFatsForToday = parseFloat(getPerDay(mealList, 'fats').toFixed(2));
+  const totalCarbsForToday = parseFloat(getPerDay(meals, 'carbs').toFixed(2));
+  const totalFatsForToday = parseFloat(getPerDay(meals, 'fats').toFixed(2));
 
   const widthAndHeight = 200;
   const series = [totalProteinsForToday, totalCarbsForToday, totalFatsForToday];
@@ -171,7 +173,7 @@ const DashboardScreen = ({mealToAdd}) => {
             coverFill={'#FFF'}
           />
           <Text style={style.chartText}>
-            {mealList
+            {meals
               .map(meal => {
                 return meal.foodList
                   ? meal.foodList.reduce(
@@ -210,7 +212,7 @@ const DashboardScreen = ({mealToAdd}) => {
           contentContainerStyle={style.container}>
           <View>
             {error && <Text>Error fetching meals: {error.message}</Text>}
-            {mealList.map((meal, index) => {
+            {meals.map((meal, index) => {
               const date = new Date(meal.dateTime);
 
               return (

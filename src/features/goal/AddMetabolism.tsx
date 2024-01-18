@@ -1,5 +1,5 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Text,
   StyleSheet,
@@ -10,6 +10,9 @@ import {
 import {Picker} from '@react-native-picker/picker';
 import UnitOfMeasurementDropdown from '../addFood/UnitOfMeasurementDropdown';
 import MetabolismDropdown from './MetabolismDropdown';
+import {UserContext} from '../auth/userContext';
+import {calculateGoal} from './goalCalculator';
+import {updateGoal} from '../../app/api/publicApi';
 
 type AddMetabolismParams = {
   selectedValue: string;
@@ -17,13 +20,9 @@ type AddMetabolismParams = {
 
 const AddMetabolism = () => {
   const navigation = useNavigation();
-  const route = useRoute<RouteProp<{params: AddMetabolismParams}, 'params'>>();
 
   const [selectedMetabolism, setSelectedMetabolism] = useState(null);
   const [weight, setWeight] = useState(NaN);
-  const [selectedValue, setSelectedValue] = useState(
-    route.params.selectedValue,
-  );
 
   const [formComplete, setFormComplete] = useState(false);
 
@@ -36,6 +35,15 @@ const AddMetabolism = () => {
     {label: 'Moderate', value: 'Moderate'},
     {label: 'Fast', value: 'Fast'},
   ];
+  const {updateState, goal} = useContext(UserContext);
+
+  const updateWeight = newWeight => {
+    updateState({weight: newWeight});
+  };
+
+  const updateMetabolism = newMeta => {
+    updateState({metabolism: newMeta});
+  };
 
   return (
     <>
@@ -77,11 +85,12 @@ const AddMetabolism = () => {
           <TouchableOpacity
             style={[style.nextButton, {opacity: formComplete ? 1 : 0.4}]}
             disabled={!formComplete}
-            onPress={() => {
-              navigation.navigate({
-                name: 'NewProfilePage',
-                params: {weight, selectedMetabolism, selectedValue},
-              });
+            onPress={async () => {
+              updateWeight(weight);
+              updateMetabolism(selectedMetabolism);
+              const userGoal = calculateGoal(weight, selectedMetabolism, goal);
+              await updateGoal(userGoal);
+              navigation.navigate('Public');
             }}>
             <Text style={style.nextButtonText}>Finish</Text>
           </TouchableOpacity>

@@ -5,7 +5,6 @@ import PublicTabs from './components/PublicTabs';
 import BarcodeScreen from '../../app/screens/BarcodeScreen';
 import AddGoal from '../goal/AddGoal';
 import AddMetabolism from '../goal/AddMetabolism';
-import NewProfilePage from '../goal/NewProfilePage';
 
 import AddMealScreen from '../addMeal/AddMealScreen';
 import {getAuth, onAuthStateChanged} from 'firebase/auth';
@@ -25,7 +24,6 @@ export type PublicStackParamList = {
   Public: undefined;
   AddGoal: undefined;
   AddMetabolism: undefined;
-  NewProfilePage: undefined;
   AddMeal: undefined;
   WelcomeScreen: undefined;
   CheckEmailScreen: undefined;
@@ -76,7 +74,6 @@ const MainNavigation = () => {
             <Stack.Screen name="Barcode" component={BarcodeScreen} />
             <Stack.Screen name="AddGoal" component={AddGoal} />
             <Stack.Screen name="AddMetabolism" component={AddMetabolism} />
-            <Stack.Screen name="NewProfilePage" component={NewProfilePage} />
           </>
         ) : (
           <>

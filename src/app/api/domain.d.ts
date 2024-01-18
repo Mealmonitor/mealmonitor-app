@@ -40,3 +40,12 @@ export interface NewUserDto {
   email: string;
   firebaseId: string;
 }
+
+export interface Goal {
+  weight: number;
+  targetCalories: number;
+  targetProteins: number;
+  targetFats: number;
+  targetCarbs: number;
+  targetFibres: number;
+}

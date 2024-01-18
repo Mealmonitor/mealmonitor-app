@@ -1,17 +1,30 @@
 import React, {useState} from 'react';
+import {Goal, Meal} from '../../app/api/domain';
+import {getUserFirstName} from '../../app/api/publicApi';
 
 export interface AppState {
   isEmailVerified: boolean;
+  email: string | null;
+  weight: number;
+  goal: 'gainWeight' | 'loseWeight' | 'increaseMuscleMass' | null;
+  metabolism: 'Slow' | 'Moderate' | 'Fast' | null;
+  meals: Meal[];
+  totalGoal: Goal;
+  name: string;
   updateState: (newState: Partial<AppState>) => void;
 }
 
 // Default application state
 const defaultState: AppState = {
   isEmailVerified: false,
-  updateState: (newState: Partial<AppState>) => {
-    // Placeholder implementation or a console warning
-    console.warn('updateState function is not implemented yet.');
-  },
+  email: null,
+  weight: 0,
+  goal: null,
+  metabolism: null,
+  meals: [],
+  totalGoal: null,
+  name: null,
+  updateState: (newState: Partial<AppState>) => {},
 };
 
 // Creating the Application state context for the provider

@@ -1,12 +1,20 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
 import {RadioButton} from 'react-native-paper';
+import {UserContext} from '../auth/userContext';
 
 const AddGoal = () => {
   const navigation = useNavigation();
 
   const [selectedValue, setSelectedValue] = useState(null);
+
+  const {updateState} = useContext(UserContext);
+
+  // Function to update the goal
+  const updateGoal = newGoal => {
+    updateState({goal: newGoal});
+  };
 
   return (
     <>
@@ -60,10 +68,8 @@ const AddGoal = () => {
             style={[style.nextButton, {opacity: selectedValue ? 1 : 0.4}]}
             disabled={!selectedValue}
             onPress={() => {
-              navigation.navigate({
-                name: 'AddMetabolism',
-                params: {selectedValue},
-              });
+              updateGoal(selectedValue);
+              navigation.navigate('AddMetabolism');
             }}>
             <Text style={style.nextButtonText}>Next</Text>
           </TouchableOpacity>
