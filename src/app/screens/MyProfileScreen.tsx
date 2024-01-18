@@ -8,39 +8,29 @@ import {UserContext} from '../../features/auth/userContext';
 import {auth} from '../config/config';
 import {ProgressBar} from 'react-native-paper';
 import {EditWeightModal} from '../../features/goal/EditWeightModal';
-import {getPerDay} from '../../features/goal/goalCalculator';
+import {calculateGoal, getPerDay} from '../../features/goal/goalCalculator';
 
 const MyProfileScreen = () => {
   const navigation = useNavigation();
   const handleAddGoalPress = () => {
     navigation.navigate('AddGoal');
   };
-  const {updateState, totalGoal, name, meals, weight} = useContext(UserContext);
+  const {updateState, totalGoal, name, meals, weight, metabolism, goal} =
+    useContext(UserContext);
 
-  useEffect(() => {
-    const fun = async () => {
-      const namew = await getUserFirstName();
-      const newGoal = await getGoal();
-      updateState({name: namew, totalGoal: newGoal});
-    };
-    fun();
-  }, [auth.currentUser]);
+  const [currentProteinsAmount, setCurrentProteinsAmount] = useState(1000);
+  const [currentCarbsAmount, setCurrentCarbsAmount] = useState(1000);
+  const [currentFatsAmount, setCurrentFatsAmount] = useState(1000);
 
-  const [currentProteinsAmount, setCurrentProteinsAmount] = useState(0);
-  const [currentCarbsAmount, setCurrentCarbsAmount] = useState(0);
-  const [currentFatsAmount, setCurrentFatsAmount] = useState(0);
-  //const [currentFibersAmount, setCurrentFibersAmount] = useState(NaN);
-
-  const [totalEnergy, setTotalEnergy] = useState(0);
+  const [totalEnergy, setTotalEnergy] = useState(1000);
 
   const [remainingProteins, setRemainingProteins] = useState(0);
   const [remainingCarbs, setRemainingCarbs] = useState(0);
   const [remainingFats, setRemainingFats] = useState(0);
-  //const [remainingFibers, setRemainingFibers] = useState(NaN);
 
-  const [progressProteins, setProgressProteins] = useState(0);
-  const [progressCarbs, setProgressCarbs] = useState(0);
-  const [progressFats, setProgressFats] = useState(0);
+  const [progressProteins, setProgressProteins] = useState(5);
+  const [progressCarbs, setProgressCarbs] = useState(5);
+  const [progressFats, setProgressFats] = useState(5);
   useEffect(() => {
     if (totalGoal !== null) {
       setCurrentProteinsAmount(
@@ -48,7 +38,9 @@ const MyProfileScreen = () => {
       );
       setCurrentCarbsAmount(parseFloat(getPerDay(meals, 'carbs').toFixed(2)));
       setCurrentFatsAmount(parseFloat(getPerDay(meals, 'fats').toFixed(2)));
-      //setCurrentFibersAmount(parseFloat(getPerDay(mealList, 'fibers').toFixed(2)));
+      setCurrentProteinsAmount(
+        parseFloat(getPerDay(meals, 'proteins').toFixed(2)),
+      );
 
       setRemainingProteins(totalGoal?.targetProteins - currentProteinsAmount);
       setRemainingCarbs(totalGoal?.targetCarbs - currentCarbsAmount);
@@ -59,12 +51,15 @@ const MyProfileScreen = () => {
       setProgressCarbs(currentCarbsAmount / totalGoal?.targetCarbs);
       setProgressFats(currentFatsAmount / totalGoal?.targetFats);
       //setProgressFibers(currentFibersAmount / fibersTarget);
+
+      updateState({totalGoal: calculateGoal(weight, metabolism, goal)});
     }
   }, [
     meals.length,
     totalGoal?.targetProteins,
     totalGoal?.targetCarbs,
     totalGoal?.targetFats,
+    weight,
   ]);
 
   if (totalGoal === null || totalGoal?.targetCalories === null) {
@@ -125,7 +120,11 @@ const MyProfileScreen = () => {
             <View style={style.profileContainer2}>
               <Text style={style.profileName2}>{name}</Text>
 
-              <TouchableOpacity style={style.logoutButton2}>
+              <TouchableOpacity
+                style={style.logoutButton2}
+                onPress={() => {
+                  logout();
+                }}>
                 <Text style={style.logoutButtonText}>Logout</Text>
               </TouchableOpacity>
             </View>
@@ -135,14 +134,17 @@ const MyProfileScreen = () => {
             <Text style={style.weightText}>Weight: {weight} kg</Text>
             <EditWeightModal
               onEditWeight={newW => {
-                updateState({weight: newW});
+                updateState({
+                  weight: newW,
+                  totalGoal: calculateGoal(newW, metabolism, goal),
+                });
               }}></EditWeightModal>
           </View>
 
           <View style={style.centeredContainer2}>
             <View>
               <Text style={style.energyText}>
-                Total Energy Target: {totalEnergy} kCal
+                Total Energy Target: {totalGoal.targetCalories} kCal
               </Text>
               <View style={style.box}>
                 <View style={style.boxAlign}>
@@ -154,7 +156,7 @@ const MyProfileScreen = () => {
                   <Text style={style.text3}>{remainingProteins} g</Text>
                 </View>
                 <View style={{marginVertical: 10, marginHorizontal: 20}}>
-                  <ProgressBar
+                  {/* <ProgressBar
                     progress={progressProteins}
                     color="#FFF"
                     style={{
@@ -162,7 +164,7 @@ const MyProfileScreen = () => {
                       backgroundColor: '#006A4E',
                       height: 10,
                     }}
-                  />
+                  /> */}
                 </View>
               </View>
               <View style={style.box}>
@@ -175,7 +177,7 @@ const MyProfileScreen = () => {
                   <Text style={style.text3}>{remainingCarbs} g</Text>
                 </View>
                 <View style={{marginVertical: 10, marginHorizontal: 20}}>
-                  <ProgressBar
+                  {/* <ProgressBar
                     progress={progressCarbs}
                     color="#FFF"
                     style={{
@@ -183,7 +185,7 @@ const MyProfileScreen = () => {
                       backgroundColor: '#006A4E',
                       height: 10,
                     }}
-                  />
+                  /> */}
                 </View>
               </View>
               <View style={style.box}>
@@ -196,7 +198,7 @@ const MyProfileScreen = () => {
                   <Text style={style.text3}>{remainingFats} g</Text>
                 </View>
                 <View style={{marginVertical: 10, marginHorizontal: 20}}>
-                  <ProgressBar
+                  {/* <ProgressBar
                     progress={progressFats}
                     color="#FFF"
                     style={{
@@ -204,30 +206,9 @@ const MyProfileScreen = () => {
                       backgroundColor: '#006A4E',
                       height: 10,
                     }}
-                  />
+                  /> */}
                 </View>
               </View>
-              {/* <View style={style.box}>
-              <View style={style.boxAlign}>
-                <Text style={style.text2}>Fibers</Text>
-                <Text style={style.text3}>Remaining</Text>
-              </View>
-              <View style={style.boxAlign}>
-                <Text style={style.text2}>{currentFibersAmount} g</Text>
-                <Text style={style.text3}>{remainingFibers} g</Text>
-              </View>
-              <View style={{marginVertical: 10, marginHorizontal: 20}}>
-                <ProgressBar
-                  progress={progressFibers}
-                  color="#FFF"
-                  style={{
-                    borderRadius: 10,
-                    backgroundColor: '#006A4E',
-                    height: 10,
-                  }}
-                />
-              </View>
-            </View> */}
             </View>
             <TouchableOpacity style={style.removeGoalButton}>
               <Text style={style.removeGoalButtonText}>Remove Goal</Text>

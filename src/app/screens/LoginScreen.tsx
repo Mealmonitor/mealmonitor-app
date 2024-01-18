@@ -11,6 +11,7 @@ import InputTextIcon from '../../../assets/svg/InputTextIcon';
 import {useContext, useState} from 'react';
 import {login} from '../../features/auth/auth';
 import {UserContext} from '../../features/auth/userContext';
+import {getGoal, getUserFirstName} from '../api/publicApi';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -27,6 +28,9 @@ const LoginScreen = () => {
 
   const handleLogin = async () => {
     const user = await login(email, password);
+    const namew = await getUserFirstName();
+    const newGoal = await getGoal();
+    updateState({name: namew, totalGoal: newGoal, weight: newGoal.weight});
     if (user) {
       setEmailAsVerified();
     }

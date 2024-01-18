@@ -27,7 +27,7 @@ const DashboardScreen = ({mealToAdd}) => {
 
   const isFocused = useIsFocused();
 
-  const {updateState, meals} = useContext(UserContext);
+  const {updateState, meals, totalGoal} = useContext(UserContext);
 
   useEffect(() => {
     async function fetchMeals(date) {
@@ -185,7 +185,12 @@ const DashboardScreen = ({mealToAdd}) => {
               .reduce((a, b) => a + b, 0)}{' '}
             kCal
           </Text>
-          {true && <Text style={style.chartSubText}>{'\n\n\n'}3342 left</Text>}
+          {/* {totalGoal.targetCalories && (
+            <Text style={style.chartSubText}>
+              {'\n\n\n'}
+              {totalGoal.targetCalories} left
+            </Text>
+          )} */}
         </View>
         <View className="pb-8 pt-6">
           <LegendItem
