@@ -8,6 +8,7 @@ export interface AppState {
   meals: Meal[];
   totalGoal: Goal | null;
   name: string | null;
+  date: Date;
   updateState: (newState: Partial<AppState>) => void;
 }
 
@@ -20,6 +21,7 @@ const defaultState: AppState = {
   totalGoal: null,
   name: null,
   updateState: (newState: Partial<AppState>) => {},
+  date: new Date(),
 };
 
 // Creating the Application state context for the provider

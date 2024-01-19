@@ -22,12 +22,12 @@ const subtractDaysFromDate = (currentDate, daysToSubtract) => {
 const DashboardScreen = ({mealToAdd}) => {
   //const [mealList, setMealList] = useState<Meal[]>([]);
   const [error, setError] = useState(null);
-  const [date, setDate] = useState(new Date());
+  //const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
 
   const isFocused = useIsFocused();
 
-  const {updateState, meals, totalGoal} = useContext(UserContext);
+  const {updateState, meals, totalGoal, date} = useContext(UserContext);
 
   useEffect(() => {
     async function fetchMeals(date) {
@@ -119,7 +119,7 @@ const DashboardScreen = ({mealToAdd}) => {
             <TouchableOpacity
               hitSlop={15}
               onPress={() => {
-                setDate(subtractDaysFromDate(date, 1));
+                updateState({date: subtractDaysFromDate(date, 1)});
               }}>
               <ArrowBack />
             </TouchableOpacity>
@@ -147,9 +147,9 @@ const DashboardScreen = ({mealToAdd}) => {
             open={open}
             mode="date"
             date={date}
-            onConfirm={date => {
+            onConfirm={newdate => {
               setOpen(false);
-              setDate(date);
+              updateState({date: newdate});
             }}
             onCancel={() => {
               setOpen(false);
@@ -160,7 +160,7 @@ const DashboardScreen = ({mealToAdd}) => {
               hitSlop={15}
               disabled={parseDate(date) === parseDate(new Date())}
               onPress={() => {
-                setDate(subtractDaysFromDate(date, -1));
+                updateState({date: subtractDaysFromDate(date, -1)});
               }}>
               <ArrowBack
                 rotated={true}

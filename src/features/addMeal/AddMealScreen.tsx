@@ -1,5 +1,5 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -21,6 +21,7 @@ import {createMeal, searchProduct} from '../../app/api/publicApi';
 import UnitOfMeasurementDropdown from '../addFood/UnitOfMeasurementDropdown';
 import CloseIcon from '../../../assets/svg/CloseIcon';
 import {dropdownData} from '../addFood/AddFoodModal';
+import {UserContext} from '../auth/userContext';
 
 interface QRCodeModal {
   route: any;
@@ -42,6 +43,8 @@ const AddMealScreen: React.FC<QRCodeModal> = () => {
   const [formComplete, setFormComplete] = useState(false);
   const [product, setProduct] = useState<ProductDto>(null);
   const navigation = useNavigation();
+  const {updateState, meals, totalGoal, date} = useContext(UserContext);
+
   const handleBarcodePress = () => {
     navigation.navigate('Barcode');
   };
@@ -54,7 +57,7 @@ const AddMealScreen: React.FC<QRCodeModal> = () => {
       version: 0,
       created: undefined,
       updated: undefined,
-      dateTime: new Date(),
+      dateTime: date,
       foodList: foodList,
     };
     await createMeal(meal);

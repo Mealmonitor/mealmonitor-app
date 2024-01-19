@@ -2,15 +2,12 @@ import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import MyProfileIcon from '../../../assets/svg/MyProfileIcon';
 import {useNavigation} from '@react-navigation/native';
 import {logout} from '../../features/auth/auth';
-import {getGoal, getUserFirstName} from '../api/publicApi';
+import {deleteGoal} from '../api/publicApi';
 import {useContext, useEffect, useState} from 'react';
 import {UserContext} from '../../features/auth/userContext';
-import {auth} from '../config/config';
-import {ProgressBar} from 'react-native-paper';
 import {EditWeightModal} from '../../features/goal/EditWeightModal';
 import {
   calculateGoal,
-  getPerDay,
   getPerDayComplete,
 } from '../../features/goal/goalCalculator';
 import React from 'react';
@@ -19,6 +16,11 @@ const MyProfileScreen = () => {
   const navigation = useNavigation();
   const handleAddGoalPress = () => {
     navigation.navigate('AddGoal');
+  };
+
+  const handleDeleteGoalPress = async () => {
+    await deleteGoal();
+    updateState({totalGoal: null});
   };
   const {updateState, totalGoal, name, meals, weight} = useContext(UserContext);
 
@@ -50,7 +52,7 @@ const MyProfileScreen = () => {
     }
   }, [meals.length, weight]);
 
-  if (totalGoal?.metabolism === undefined) {
+  if (totalGoal === null || totalGoal?.metabolism === undefined) {
     return (
       <>
         <View className="pt-12">
@@ -70,9 +72,9 @@ const MyProfileScreen = () => {
 
           <View style={style.centeredContainer}>
             <Text style={style.text}>
-              Hi {name + ',\n\n'}You have not currently set a goal. Choose one
-              and give us some information about you to begin your health
-              improvement journey!
+              Hi{'!,\n\n'}You have not currently set a goal. Choose one and give
+              us some information about you to begin your health improvement
+              journey!
             </Text>
             <TouchableOpacity
               style={style.setGoalButton}
@@ -223,7 +225,9 @@ const MyProfileScreen = () => {
                 </View>
               </View>
             </View>
-            <TouchableOpacity style={style.removeGoalButton}>
+            <TouchableOpacity
+              style={style.removeGoalButton}
+              onPress={handleDeleteGoalPress}>
               <Text style={style.removeGoalButtonText}>Remove Goal</Text>
             </TouchableOpacity>
           </View>
