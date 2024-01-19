@@ -79,6 +79,17 @@ const DashboardScreen = ({mealToAdd}) => {
     );
   };
 
+  const totalCaloriesConsumed = meals
+    .map(meal =>
+      meal.foodList
+        ? meal.foodList.reduce((sum, current) => sum + current.calories, 0)
+        : 0,
+    )
+    .reduce((a, b) => a + b, 0);
+
+  // Calculate remaining calories
+  const remainingCalories = totalGoal.targetCalories - totalCaloriesConsumed;
+
   const totalProteinsForToday = parseFloat(
     getPerDay(meals, 'proteins').toFixed(2),
   );
@@ -188,7 +199,7 @@ const DashboardScreen = ({mealToAdd}) => {
           {/* {totalGoal.targetCalories && (
             <Text style={style.chartSubText}>
               {'\n\n\n'}
-              {totalGoal.targetCalories} left
+              {remainingCalories > 0 ? remainingCalories : 0} left
             </Text>
           )} */}
         </View>

@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {Goal, Meal} from '../../app/api/domain';
-import {getUserFirstName} from '../../app/api/publicApi';
 
 export interface AppState {
   isEmailVerified: boolean;
@@ -9,8 +8,8 @@ export interface AppState {
   goal: 'gainWeight' | 'loseWeight' | 'increaseMuscleMass' | null;
   metabolism: 'Slow' | 'Moderate' | 'Fast' | null;
   meals: Meal[];
-  totalGoal: Goal;
-  name: string;
+  totalGoal: Goal | null;
+  name: string | null;
   updateState: (newState: Partial<AppState>) => void;
 }
 

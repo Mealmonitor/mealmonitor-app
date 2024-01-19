@@ -8,7 +8,12 @@ import {UserContext} from '../../features/auth/userContext';
 import {auth} from '../config/config';
 import {ProgressBar} from 'react-native-paper';
 import {EditWeightModal} from '../../features/goal/EditWeightModal';
-import {calculateGoal, getPerDay} from '../../features/goal/goalCalculator';
+import {
+  calculateGoal,
+  getPerDay,
+  getPerDayComplete,
+} from '../../features/goal/goalCalculator';
+import React from 'react';
 
 const MyProfileScreen = () => {
   const navigation = useNavigation();
@@ -22,36 +27,20 @@ const MyProfileScreen = () => {
   const [currentCarbsAmount, setCurrentCarbsAmount] = useState(1000);
   const [currentFatsAmount, setCurrentFatsAmount] = useState(1000);
 
-  const [totalEnergy, setTotalEnergy] = useState(1000);
-
-  const [remainingProteins, setRemainingProteins] = useState(0);
-  const [remainingCarbs, setRemainingCarbs] = useState(0);
-  const [remainingFats, setRemainingFats] = useState(0);
-
-  const [progressProteins, setProgressProteins] = useState(5);
-  const [progressCarbs, setProgressCarbs] = useState(5);
-  const [progressFats, setProgressFats] = useState(5);
   useEffect(() => {
     if (totalGoal !== null) {
       setCurrentProteinsAmount(
-        parseFloat(getPerDay(meals, 'proteins').toFixed(2)),
+        parseFloat(getPerDayComplete(meals, 'proteins').toFixed(0)),
       );
-      setCurrentCarbsAmount(parseFloat(getPerDay(meals, 'carbs').toFixed(2)));
-      setCurrentFatsAmount(parseFloat(getPerDay(meals, 'fats').toFixed(2)));
+      setCurrentCarbsAmount(
+        parseFloat(getPerDayComplete(meals, 'carbs').toFixed(0)),
+      );
+      setCurrentFatsAmount(
+        parseFloat(getPerDayComplete(meals, 'fats').toFixed(0)),
+      );
       setCurrentProteinsAmount(
-        parseFloat(getPerDay(meals, 'proteins').toFixed(2)),
+        parseFloat(getPerDayComplete(meals, 'proteins').toFixed(0)),
       );
-
-      setRemainingProteins(totalGoal?.targetProteins - currentProteinsAmount);
-      setRemainingCarbs(totalGoal?.targetCarbs - currentCarbsAmount);
-      setRemainingFats(totalGoal?.targetFats - currentFatsAmount);
-      //setRemainingFibers(fibersTarget - currentFibersAmount);
-
-      setProgressProteins(currentProteinsAmount / totalGoal?.targetProteins);
-      setProgressCarbs(currentCarbsAmount / totalGoal?.targetCarbs);
-      setProgressFats(currentFatsAmount / totalGoal?.targetFats);
-      //setProgressFibers(currentFibersAmount / fibersTarget);
-
       updateState({totalGoal: calculateGoal(weight, metabolism, goal)});
     }
   }, [
@@ -62,7 +51,10 @@ const MyProfileScreen = () => {
     weight,
   ]);
 
-  if (totalGoal === null || totalGoal?.targetCalories === null) {
+  const progressProteins = currentProteinsAmount / totalGoal?.targetProteins;
+  const progressCarbs = currentCarbsAmount / totalGoal?.targetCarbs;
+  const progressFats = currentFatsAmount / totalGoal?.targetFats;
+  if (totalGoal === null || Number.isNaN(totalGoal?.targetCalories)) {
     return (
       <>
         <View className="pt-12">
@@ -153,10 +145,16 @@ const MyProfileScreen = () => {
                 </View>
                 <View style={style.boxAlign}>
                   <Text style={style.text2}>{currentProteinsAmount} g</Text>
-                  <Text style={style.text3}>{remainingProteins} g</Text>
+                  <Text style={style.text3}>
+                    {(totalGoal?.targetProteins - currentProteinsAmount > 0
+                      ? totalGoal?.targetProteins - currentProteinsAmount
+                      : 0
+                    ).toFixed(0)}{' '}
+                    g
+                  </Text>
                 </View>
                 <View style={{marginVertical: 10, marginHorizontal: 20}}>
-                  {/* <ProgressBar
+                  <ProgressBar
                     progress={progressProteins}
                     color="#FFF"
                     style={{
@@ -164,7 +162,7 @@ const MyProfileScreen = () => {
                       backgroundColor: '#006A4E',
                       height: 10,
                     }}
-                  /> */}
+                  />
                 </View>
               </View>
               <View style={style.box}>
@@ -174,10 +172,16 @@ const MyProfileScreen = () => {
                 </View>
                 <View style={style.boxAlign}>
                   <Text style={style.text2}>{currentCarbsAmount} g</Text>
-                  <Text style={style.text3}>{remainingCarbs} g</Text>
+                  <Text style={style.text3}>
+                    {(totalGoal?.targetCarbs - currentCarbsAmount > 0
+                      ? totalGoal?.targetCarbs - currentCarbsAmount
+                      : 0
+                    ).toFixed(0)}{' '}
+                    g
+                  </Text>
                 </View>
                 <View style={{marginVertical: 10, marginHorizontal: 20}}>
-                  {/* <ProgressBar
+                  <ProgressBar
                     progress={progressCarbs}
                     color="#FFF"
                     style={{
@@ -185,7 +189,7 @@ const MyProfileScreen = () => {
                       backgroundColor: '#006A4E',
                       height: 10,
                     }}
-                  /> */}
+                  />
                 </View>
               </View>
               <View style={style.box}>
@@ -195,10 +199,16 @@ const MyProfileScreen = () => {
                 </View>
                 <View style={style.boxAlign}>
                   <Text style={style.text2}>{currentFatsAmount} g</Text>
-                  <Text style={style.text3}>{remainingFats} g</Text>
+                  <Text style={style.text3}>
+                    {(totalGoal?.targetFats - currentFatsAmount > 0
+                      ? totalGoal?.targetCarbs - currentCarbsAmount
+                      : 0
+                    ).toFixed(0)}{' '}
+                    g
+                  </Text>
                 </View>
                 <View style={{marginVertical: 10, marginHorizontal: 20}}>
-                  {/* <ProgressBar
+                  <ProgressBar
                     progress={progressFats}
                     color="#FFF"
                     style={{
@@ -206,7 +216,7 @@ const MyProfileScreen = () => {
                       backgroundColor: '#006A4E',
                       height: 10,
                     }}
-                  /> */}
+                  />
                 </View>
               </View>
             </View>
@@ -391,6 +401,7 @@ const style = StyleSheet.create({
     backgroundColor: '#006A4E',
     alignItems: 'center',
     borderRadius: 20,
+    marginBottom: 30,
   },
   removeGoalButtonText: {
     color: 'white',

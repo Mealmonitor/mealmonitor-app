@@ -4,6 +4,9 @@ import {
   TouchableOpacity,
   TextInput,
   Text,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
 } from 'react-native';
 import {Link, useNavigation} from '@react-navigation/native';
 import InputPasswordIcon from '../../../assets/svg/InputPasswordIcon';
@@ -12,6 +15,7 @@ import {useContext, useState} from 'react';
 import {login} from '../../features/auth/auth';
 import {UserContext} from '../../features/auth/userContext';
 import {getGoal, getUserFirstName} from '../api/publicApi';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -27,14 +31,45 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   const handleLogin = async () => {
-    const user = await login(email, password);
-    const namew = await getUserFirstName();
-    const newGoal = await getGoal();
-    updateState({name: namew, totalGoal: newGoal, weight: newGoal.weight});
-    if (user) {
-      setEmailAsVerified();
+    try {
+      if (!validateEmail() || !validatePassword()) {
+        return;
+      }
+      const user = await login(email, password);
+      const namew = await getUserFirstName();
+      const newGoal = await getGoal();
+      updateState({name: namew, totalGoal: newGoal, weight: newGoal.weight});
+      if (user) {
+        setEmailAsVerified();
+      }
+    } catch (error) {
+      Alert.alert('Invalid email or password', 'Please try again later.');
     }
   };
+
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const validateEmail = () => {
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(email)) {
+      setEmailError('Invalid email format');
+      return false;
+    }
+    setEmailError('');
+    return true;
+  };
+
+  const validatePassword = () => {
+    // Example: Check if password is at least 6 characters
+    if (password.length < 6) {
+      setPasswordError('Password must be at least 6 characters');
+      return false;
+    }
+    setPasswordError('');
+    return true;
+  };
+
   return (
     <View style={style.app}>
       <View className="pt-12">
@@ -44,68 +79,76 @@ const LoginScreen = () => {
       </View>
 
       <View style={style.modalLikeContainer}>
-        <View style={style.container}>
-          <View style={style.titleTextBox}>
-            <Text style={style.titleText}>Login</Text>
-          </View>
-          <View style={style.fieldContainer}>
-            <Text style={style.inputHelpText}>E-Mail Address</Text>
-            <View style={style.input}>
-              <TextInput
-                textContentType="emailAddress"
-                autoCapitalize="none"
-                style={style.textBox}
-                onChangeText={newText => setEmail(newText)}
-              />
-            </View>
-          </View>
+        <KeyboardAvoidingView
+          style={style.app}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}>
+          <ScrollView style={{flex: 1}}>
+            <View style={style.container}>
+              <View style={style.titleTextBox}>
+                <Text style={style.titleText}>Login</Text>
+              </View>
+              <View style={style.fieldContainer}>
+                <Text style={style.inputHelpText}>E-Mail Address</Text>
+                <View style={style.input}>
+                  <TextInput
+                    textContentType="emailAddress"
+                    autoCapitalize="none"
+                    style={style.textBox}
+                    onChangeText={newText => setEmail(newText)}
+                  />
+                </View>
+                {!!emailError && <Text>{emailError}</Text>}
+              </View>
 
-          <View style={style.fieldContainer}>
-            <Text style={style.inputHelpText}>Password</Text>
-            <View style={style.input}>
-              <TextInput
-                textContentType="password"
-                style={style.textBox}
-                secureTextEntry={isPasswordSecure}
-                onChangeText={newText => setPassword(newText)}
-              />
-              <TouchableOpacity
-                hitSlop={15}
-                onPress={() => {
-                  isPasswordSecure
-                    ? setIsPasswordSecure(false)
-                    : setIsPasswordSecure(true);
-                }}>
-                {!isPasswordSecure ? (
-                  <InputPasswordIcon size={28} color={'black'} />
-                ) : (
-                  <InputTextIcon size={28} color={'black'}></InputTextIcon>
-                )}
+              <View style={style.fieldContainer}>
+                <Text style={style.inputHelpText}>Password</Text>
+                <View style={style.input}>
+                  <TextInput
+                    textContentType="password"
+                    style={style.textBox}
+                    secureTextEntry={isPasswordSecure}
+                    onChangeText={newText => setPassword(newText)}
+                  />
+                  <TouchableOpacity
+                    hitSlop={15}
+                    onPress={() => {
+                      isPasswordSecure
+                        ? setIsPasswordSecure(false)
+                        : setIsPasswordSecure(true);
+                    }}>
+                    {!isPasswordSecure ? (
+                      <InputPasswordIcon size={28} color={'black'} />
+                    ) : (
+                      <InputTextIcon size={28} color={'black'}></InputTextIcon>
+                    )}
+                  </TouchableOpacity>
+                </View>
+                {!!passwordError && <Text>{passwordError}</Text>}
+              </View>
+
+              <Link to={{screen: 'ForgotPasswordScreen'}} style={style.link}>
+                Forgot Password?
+              </Link>
+
+              <Link to={{screen: 'Register'}} style={style.link}>
+                Have no MealMonitor account? Go to Registration
+              </Link>
+
+              <View style={style.filler}></View>
+
+              <TouchableOpacity style={style.button} onPress={handleLogin}>
+                <Text style={style.buttonText}>Login</Text>
               </TouchableOpacity>
             </View>
-          </View>
-
-          <Link to={{screen: 'ForgotPasswordScreen'}} style={style.link}>
-            Forgot Password?
-          </Link>
-
-          <Link to={{screen: 'Register'}} style={style.link}>
-            Have no MealMonitor account? Go to Registration
-          </Link>
-
-          <View style={style.filler}></View>
-
-          <TouchableOpacity style={style.button} onPress={handleLogin}>
-            <Text style={style.buttonText}>Login</Text>
-          </TouchableOpacity>
-        </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </View>
     </View>
   );
 };
 
 export const style = StyleSheet.create({
-  app: {flex: 1, backgroundColor: '#5CA08E'},
+  app: {flex: 1},
   textDescription: {
     fontWeight: 'bold',
     fontSize: 20,
@@ -146,6 +189,7 @@ export const style = StyleSheet.create({
     alignSelf: 'stretch',
   },
   container: {
+    flex: 1,
     flexGrow: 1,
     display: 'flex',
     paddingHorizontal: 24,

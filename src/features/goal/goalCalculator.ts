@@ -34,10 +34,11 @@ export const calculateGoal = (
     targetProteins: proteinsTarget,
     targetFats: fatsTarget,
     targetCarbs: (totalEnergy - proteinsTarget * 4 - fatsTarget * 9) / 4,
-    targetFibres: null,
+    targetFibres: NaN,
   };
 };
 
+// getPerDayPercent
 export const getPerDay = (meals: Meal[], nutriVal: string) => {
   return (
     (meals
@@ -60,4 +61,14 @@ export const getPerDay = (meals: Meal[], nutriVal: string) => {
       })
       .reduce((a, b) => a + b, 0)
   );
+};
+
+export const getPerDayComplete = (meals: Meal[], nutriVal: string) => {
+  return meals
+    .map(meal => {
+      return meal.foodList
+        ? meal.foodList.reduce((sum, current) => sum + current[nutriVal], 0)
+        : 0;
+    })
+    .reduce((a, b) => a + b, 0);
 };
