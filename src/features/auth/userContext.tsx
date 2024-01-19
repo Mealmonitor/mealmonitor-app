@@ -5,8 +5,6 @@ export interface AppState {
   isEmailVerified: boolean;
   email: string | null;
   weight: number;
-  goal: 'gainWeight' | 'loseWeight' | 'increaseMuscleMass' | null;
-  metabolism: 'Slow' | 'Moderate' | 'Fast' | null;
   meals: Meal[];
   totalGoal: Goal | null;
   name: string | null;
@@ -18,8 +16,6 @@ const defaultState: AppState = {
   isEmailVerified: false,
   email: null,
   weight: 0,
-  goal: null,
-  metabolism: null,
   meals: [],
   totalGoal: null,
   name: null,

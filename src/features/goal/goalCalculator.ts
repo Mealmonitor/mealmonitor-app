@@ -2,12 +2,12 @@ import {useState} from 'react';
 import {Goal, Meal} from '../../app/api/domain';
 
 export const calculateGoal = (
-  weight,
+  weight: number,
   selectedMetabolism,
   selectedGoal,
 ): Goal => {
-  let tableValue;
-
+  let tableValue: number = 30;
+  console.log(selectedGoal, selectedMetabolism);
   if (selectedGoal === 'loseWeight') {
     if (selectedMetabolism === 'Slow') tableValue = 22;
     if (selectedMetabolism === 'Moderate') tableValue = 24;
@@ -35,6 +35,8 @@ export const calculateGoal = (
     targetFats: fatsTarget,
     targetCarbs: (totalEnergy - proteinsTarget * 4 - fatsTarget * 9) / 4,
     targetFibres: NaN,
+    selectedGoal: selectedGoal,
+    metabolism: selectedMetabolism,
   };
 };
 
@@ -64,11 +66,13 @@ export const getPerDay = (meals: Meal[], nutriVal: string) => {
 };
 
 export const getPerDayComplete = (meals: Meal[], nutriVal: string) => {
-  return meals
+  const a = meals
     .map(meal => {
       return meal.foodList
         ? meal.foodList.reduce((sum, current) => sum + current[nutriVal], 0)
         : 0;
     })
     .reduce((a, b) => a + b, 0);
+  console.log('getperday: ' + a);
+  return a;
 };

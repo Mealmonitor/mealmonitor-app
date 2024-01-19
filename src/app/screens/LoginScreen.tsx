@@ -16,11 +16,12 @@ import {login} from '../../features/auth/auth';
 import {UserContext} from '../../features/auth/userContext';
 import {getGoal, getUserFirstName} from '../api/publicApi';
 import {ScrollView} from 'react-native-gesture-handler';
+import React from 'react';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {updateState} = useContext(UserContext);
+  const {updateState, totalGoal} = useContext(UserContext);
   const setEmailAsVerified = () => {
     updateState({
       isEmailVerified: true,
@@ -39,6 +40,7 @@ const LoginScreen = () => {
       const namew = await getUserFirstName();
       const newGoal = await getGoal();
       updateState({name: namew, totalGoal: newGoal, weight: newGoal.weight});
+      console.log(totalGoal);
       if (user) {
         setEmailAsVerified();
       }

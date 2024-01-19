@@ -20,8 +20,7 @@ const MyProfileScreen = () => {
   const handleAddGoalPress = () => {
     navigation.navigate('AddGoal');
   };
-  const {updateState, totalGoal, name, meals, weight, metabolism, goal} =
-    useContext(UserContext);
+  const {updateState, totalGoal, name, meals, weight} = useContext(UserContext);
 
   const [currentProteinsAmount, setCurrentProteinsAmount] = useState(1000);
   const [currentCarbsAmount, setCurrentCarbsAmount] = useState(1000);
@@ -41,20 +40,17 @@ const MyProfileScreen = () => {
       setCurrentProteinsAmount(
         parseFloat(getPerDayComplete(meals, 'proteins').toFixed(0)),
       );
-      updateState({totalGoal: calculateGoal(weight, metabolism, goal)});
+      updateState({
+        totalGoal: calculateGoal(
+          weight,
+          totalGoal.metabolism,
+          totalGoal.selectedGoal,
+        ),
+      });
     }
-  }, [
-    meals.length,
-    totalGoal?.targetProteins,
-    totalGoal?.targetCarbs,
-    totalGoal?.targetFats,
-    weight,
-  ]);
+  }, [meals.length, weight]);
 
-  const progressProteins = currentProteinsAmount / totalGoal?.targetProteins;
-  const progressCarbs = currentCarbsAmount / totalGoal?.targetCarbs;
-  const progressFats = currentFatsAmount / totalGoal?.targetFats;
-  if (totalGoal === null || Number.isNaN(totalGoal?.targetCalories)) {
+  if (totalGoal?.metabolism === undefined) {
     return (
       <>
         <View className="pt-12">
@@ -97,6 +93,9 @@ const MyProfileScreen = () => {
       </>
     );
   } else {
+    const progressProteins = currentProteinsAmount / totalGoal?.targetProteins;
+    const progressCarbs = currentCarbsAmount / totalGoal?.targetCarbs;
+    const progressFats = currentFatsAmount / totalGoal?.targetFats;
     return (
       <>
         <View className="pt-12">
@@ -128,7 +127,11 @@ const MyProfileScreen = () => {
               onEditWeight={newW => {
                 updateState({
                   weight: newW,
-                  totalGoal: calculateGoal(newW, metabolism, goal),
+                  totalGoal: calculateGoal(
+                    newW,
+                    totalGoal.metabolism,
+                    totalGoal.selectedGoal,
+                  ),
                 });
               }}></EditWeightModal>
           </View>
@@ -154,7 +157,7 @@ const MyProfileScreen = () => {
                   </Text>
                 </View>
                 <View style={{marginVertical: 10, marginHorizontal: 20}}>
-                  <ProgressBar
+                  {/* <ProgressBar
                     progress={progressProteins}
                     color="#FFF"
                     style={{
@@ -162,7 +165,7 @@ const MyProfileScreen = () => {
                       backgroundColor: '#006A4E',
                       height: 10,
                     }}
-                  />
+                  /> */}
                 </View>
               </View>
               <View style={style.box}>
@@ -181,7 +184,7 @@ const MyProfileScreen = () => {
                   </Text>
                 </View>
                 <View style={{marginVertical: 10, marginHorizontal: 20}}>
-                  <ProgressBar
+                  {/* <ProgressBar
                     progress={progressCarbs}
                     color="#FFF"
                     style={{
@@ -189,7 +192,7 @@ const MyProfileScreen = () => {
                       backgroundColor: '#006A4E',
                       height: 10,
                     }}
-                  />
+                  /> */}
                 </View>
               </View>
               <View style={style.box}>
@@ -208,7 +211,7 @@ const MyProfileScreen = () => {
                   </Text>
                 </View>
                 <View style={{marginVertical: 10, marginHorizontal: 20}}>
-                  <ProgressBar
+                  {/* <ProgressBar
                     progress={progressFats}
                     color="#FFF"
                     style={{
@@ -216,7 +219,7 @@ const MyProfileScreen = () => {
                       backgroundColor: '#006A4E',
                       height: 10,
                     }}
-                  />
+                  /> */}
                 </View>
               </View>
             </View>

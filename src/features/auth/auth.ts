@@ -10,7 +10,8 @@ import {
 } from 'firebase/auth';
 import {auth} from '../../app/config/config';
 import {backendSignup} from '../../app/api/publicApi';
-import {useState} from 'react';
+import {useContext, useState} from 'react';
+import {UserContext} from './userContext';
 
 export const login = async (email, password) => {
   const userCredential = await signInWithEmailAndPassword(
@@ -24,7 +25,7 @@ export const login = async (email, password) => {
 
 export const emailVerification = async () => {
   const user = auth.currentUser;
-  await sendEmailVerification(auth.currentUser, {
+  await sendEmailVerification(auth.currentUser!, {
     handleCodeInApp: true,
     url: 'https://google.com/',
   });
@@ -45,7 +46,7 @@ export const signup = async (email, password, firstName, lastName) => {
     email: email,
     firstName: firstName,
     lastName: lastName,
-    firebaseId: auth.currentUser.uid,
+    firebaseId: auth.currentUser!.uid,
   });
 
   return userCredential.user;

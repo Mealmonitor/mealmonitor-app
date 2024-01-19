@@ -9,11 +9,11 @@ const AddGoal = () => {
 
   const [selectedValue, setSelectedValue] = useState(null);
 
-  const {updateState} = useContext(UserContext);
+  const {updateState, totalGoal} = useContext(UserContext);
 
   // Function to update the goal
   const updateGoal = newGoal => {
-    updateState({goal: newGoal});
+    updateState({totalGoal: {...totalGoal, selectedGoal: newGoal}});
   };
 
   return (

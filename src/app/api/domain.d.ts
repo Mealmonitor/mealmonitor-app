@@ -48,4 +48,6 @@ export interface Goal {
   targetFats: number;
   targetCarbs: number;
   targetFibres: number;
+  metabolism: 'Slow' | 'Fast' | 'Moderate';
+  selectedGoal: 'loseWeight' | 'increaseMuscleMass' | 'gainWeight';
 }

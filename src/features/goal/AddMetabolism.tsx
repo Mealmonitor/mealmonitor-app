@@ -35,14 +35,15 @@ const AddMetabolism = () => {
     {label: 'Moderate', value: 'Moderate'},
     {label: 'Fast', value: 'Fast'},
   ];
-  const {updateState, goal} = useContext(UserContext);
+  const {updateState, totalGoal} = useContext(UserContext);
 
   const updateWeight = newWeight => {
     updateState({weight: newWeight});
   };
 
   const updateMetabolism = newMeta => {
-    updateState({metabolism: newMeta});
+    updateState({totalGoal: {...totalGoal, metabolism: newMeta}});
+    console.log('META' + totalGoal);
   };
 
   return (
@@ -88,7 +89,11 @@ const AddMetabolism = () => {
             onPress={async () => {
               updateWeight(weight);
               updateMetabolism(selectedMetabolism);
-              const userGoal = calculateGoal(weight, selectedMetabolism, goal);
+              const userGoal = calculateGoal(
+                weight,
+                selectedMetabolism,
+                totalGoal?.selectedGoal,
+              );
               await updateGoal(userGoal);
               navigation.navigate('Public');
             }}>

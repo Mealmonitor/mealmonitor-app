@@ -26,8 +26,10 @@ const RegisterScreen = () => {
   const [isPasswordSecure, setIsPasswordSecure] = useState(true);
 
   const navigation = useNavigation();
+  const {updateState, totalGoal} = useContext(UserContext);
 
   const handleRegister = async () => {
+    updateState({isEmailVerified: false});
     const isEmailValid = validateEmail();
     const isPasswordValid = validatePassword();
 
@@ -39,7 +41,6 @@ const RegisterScreen = () => {
     navigation.navigate('CheckEmailScreen');
   };
 
-  const {isEmailVerified, updateState} = useContext(UserContext);
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
 

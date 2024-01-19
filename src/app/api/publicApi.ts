@@ -3,7 +3,7 @@ import {Goal, Meal, NewUserDto, ProductDto} from './domain';
 import {auth} from '../config/config';
 import {G} from 'react-native-svg';
 
-const baseURL = 'https://api.mealmonitor.galitianu.com';
+const baseURL = 'http://192.168.100.12:8088';
 
 export const parseDate = (date: Date) => {
   return (
@@ -18,13 +18,13 @@ export const parseDate = (date: Date) => {
 export async function getMeals(date) {
   try {
     const response = await axios.get(
-      baseURL + '/meals/' + auth.currentUser.uid,
+      baseURL + '/meals/' + auth.currentUser!.uid,
       {
         params: {
           day: parseDate(date),
         },
         headers: {
-          Authorization: `Bearer ${await auth.currentUser.getIdToken()}`,
+          Authorization: `Bearer ${await auth.currentUser!.getIdToken()}`,
         },
       },
     );
@@ -37,11 +37,11 @@ export async function getMeals(date) {
 
 export async function deleteMeal(meal: Meal) {
   const config = {
-    headers: {Authorization: `Bearer ${await auth.currentUser.getIdToken()}`},
+    headers: {Authorization: `Bearer ${await auth.currentUser!.getIdToken()}`},
   };
   try {
     const response = await axios.delete(
-      baseURL + '/meals/' + auth.currentUser.uid + '/' + meal.id,
+      baseURL + '/meals/' + auth.currentUser!.uid + '/' + meal.id,
       config,
     );
   } catch (error) {
@@ -52,7 +52,7 @@ export async function deleteMeal(meal: Meal) {
 
 export async function getProductByBarcode(barCode: string) {
   const config = {
-    headers: {Authorization: `Bearer ${await auth.currentUser.getIdToken()}`},
+    headers: {Authorization: `Bearer ${await auth.currentUser!.getIdToken()}`},
   };
   try {
     const response = await axios.get(baseURL + '/products/' + barCode, config);
@@ -66,11 +66,11 @@ export async function getProductByBarcode(barCode: string) {
 
 export async function createMeal(meal: Meal) {
   const config = {
-    headers: {Authorization: `Bearer ${await auth.currentUser.getIdToken()}`},
+    headers: {Authorization: `Bearer ${await auth.currentUser!.getIdToken()}`},
   };
   try {
     const response = await axios.post(
-      baseURL + '/meals/' + auth.currentUser.uid,
+      baseURL + '/meals/' + auth.currentUser!.uid,
       meal,
       config,
     );
@@ -82,7 +82,7 @@ export async function createMeal(meal: Meal) {
 
 export async function backendSignup(newUser: NewUserDto) {
   const config = {
-    headers: {Authorization: `Bearer ${await auth.currentUser.getIdToken()}`},
+    headers: {Authorization: `Bearer ${await auth.currentUser!.getIdToken()}`},
   };
   try {
     const response = await axios.post(baseURL + '/users', newUser, config);
@@ -94,7 +94,7 @@ export async function backendSignup(newUser: NewUserDto) {
 
 export async function searchProduct(query: string) {
   const config = {
-    headers: {Authorization: `Bearer ${await auth.currentUser.getIdToken()}`},
+    headers: {Authorization: `Bearer ${await auth.currentUser!.getIdToken()}`},
   };
   try {
     const response = await axios.get(
@@ -111,11 +111,11 @@ export async function searchProduct(query: string) {
 
 export async function getUserFirstName() {
   const config = {
-    headers: {Authorization: `Bearer ${await auth.currentUser.getIdToken()}`},
+    headers: {Authorization: `Bearer ${await auth.currentUser!.getIdToken()}`},
   };
   try {
     const response = await axios.get(
-      baseURL + '/users/' + auth.currentUser.uid + '/name',
+      baseURL + '/users/' + auth.currentUser!.uid + '/name',
       config,
     );
     console.log(response.data);
@@ -128,11 +128,11 @@ export async function getUserFirstName() {
 
 export async function updateGoal(goal: Goal) {
   const config = {
-    headers: {Authorization: `Bearer ${await auth.currentUser.getIdToken()}`},
+    headers: {Authorization: `Bearer ${await auth.currentUser!.getIdToken()}`},
   };
   try {
     const response = await axios.post(
-      baseURL + '/users/' + auth.currentUser.uid + '/goal',
+      baseURL + '/users/' + auth.currentUser!.uid + '/goal',
       goal,
       config,
     );
@@ -144,15 +144,30 @@ export async function updateGoal(goal: Goal) {
 
 export async function getGoal() {
   const config = {
-    headers: {Authorization: `Bearer ${await auth.currentUser.getIdToken()}`},
+    headers: {Authorization: `Bearer ${await auth.currentUser!.getIdToken()}`},
   };
   try {
     const response = await axios.get(
-      baseURL + '/users/' + auth.currentUser.uid + '/goal',
+      baseURL + '/users/' + auth.currentUser!.uid + '/goal',
       config,
     );
     console.log(response.data);
     return response.data as Goal;
+  } catch (error) {
+    console.error(error);
+    throw error; // re-throw the error so that it can be caught and handled in the component
+  }
+}
+
+export async function deleteGoal() {
+  const config = {
+    headers: {Authorization: `Bearer ${await auth.currentUser!.getIdToken()}`},
+  };
+  try {
+    await axios.delete(
+      baseURL + '/users/' + auth.currentUser!.uid + '/goal',
+      config,
+    );
   } catch (error) {
     console.error(error);
     throw error; // re-throw the error so that it can be caught and handled in the component

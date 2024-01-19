@@ -88,7 +88,7 @@ const DashboardScreen = ({mealToAdd}) => {
     .reduce((a, b) => a + b, 0);
 
   // Calculate remaining calories
-  const remainingCalories = totalGoal.targetCalories - totalCaloriesConsumed;
+  //const remainingCalories = totalGoal.targetCalories - totalCaloriesConsumed;
 
   const totalProteinsForToday = parseFloat(
     getPerDay(meals, 'proteins').toFixed(2),
@@ -227,7 +227,7 @@ const DashboardScreen = ({mealToAdd}) => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={style.container}>
           <View>
-            {error && <Text>Error fetching meals: {error.message}</Text>}
+            {error && <Text>Error fetching meals</Text>}
             {meals.map((meal, index) => {
               const date = new Date(meal.dateTime);
 
